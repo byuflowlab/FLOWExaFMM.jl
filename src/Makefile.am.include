@@ -1,0 +1,80 @@
+# Optimization flags
+AM_CPPFLAGS =
+
+if EXAFMM_HAVE_CRAY
+AM_CXXFLAGS = -dynamic
+AM_FCFLAGS = -dynamic
+if EXAFMM_HAVE_GNU
+AM_CXXFLAGS += -ffast-math -funroll-loops -fabi-version=6 -Wfatal-errors
+AM_FCFLAGS += -ffast-math -funroll-loops
+endif
+if EXAFMM_HAVE_INTEL
+AM_CXXFLAGS += -ansi_alias -fabi-version=6 -Wfatal-errors
+AM_FCFLAGS += -ansi_alias
+endif
+else
+if EXAFMM_HAVE_INTEL
+AM_CXXFLAGS = -ansi_alias -fabi-version=6 -Wfatal-errors
+AM_FCFLAGS = -ansi_alias
+else
+if EXAFMM_HAVE_CLANG
+AM_CXXFLAGS = -ffast-math -funroll-loops -Wfatal-errors
+AM_FCFLAGS = -ffast-math -funroll-loops
+else
+if EXAFMM_HAVE_GNU
+AM_CXXFLAGS = -ffast-math -funroll-loops -fabi-version=6 -Wfatal-errors
+AM_FCFLAGS = -ffast-math -funroll-loops
+else
+AM_CXXFLAGS =
+AM_FCFLAGS =
+endif
+endif
+endif
+endif
+
+# OpenMP
+if EXAFMM_HAVE_OPENMP
+AM_CPPFLAGS += -DEXAFMM_WITH_OPENMP
+AM_CXXFLAGS += $(OPENMP_CXXFLAGS)
+AM_FCFLAGS += $(OPENMP_CXXFLAGS)
+endif
+
+# Floating point precision
+if EXAFMM_SINGLE
+AM_CPPFLAGS += -DEXAFMM_SINGLE
+endif
+
+# SIMD
+AM_CPPFLAGS += $(SIMD_FLAGS)
+
+# OpenMPI needs an extra library when linking with Fortran
+if EXAFMM_HAVE_MPI
+LIBS += $(OPENMPILIBS)
+endif
+
+# Enable assert
+if EXAFMM_ASSERT
+else
+AM_CPPFLAGS += -DNDEBUG
+endif
+
+# Use all possible debugging flags
+if EXAFMM_DEBUG
+AM_CXXFLAGS += $(COMPILER_CXXFLAGS) -DEXAFMM_DEBUG
+AM_FCFLAGS += $(COMPILER_FCFLAGS) -DEXAFMM_DEBUG
+endif
+
+AM_MAKEFLAGS = -s
+
+buildbot:
+	@make -C .. buildbot
+cleanbin:
+	@make -C .. cleanbin
+cleandat:
+	@make -C .. cleandat
+cleanlib:
+	@make -C .. cleanlib
+cleanreg:
+	@make -C .. cleanreg
+cleanall:
+	@make -C .. cleanall
