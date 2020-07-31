@@ -1,20 +1,5 @@
 ## Development Guide
 
-**Flow of development:**
-
-1. Experiment with design decisions in 2d/
-
-2. Propagate to other directories when decision is reached
-
-3. Write incremental tests and leave breadcrumbs
-
-4. Document each new code
-
-5. Unit test for each component
-
-6. Integration/regression test for each commit
-
-
 **Variable name convention:**
 
 Use all capital for

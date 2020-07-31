@@ -6,7 +6,7 @@
 
 COMPILE_DIR=build
 THIS_DIR=$(pwd)
-VPM_DIR=/home/edoalvar/Dropbox/FLOWResearch/MyCodes/MyVPM/
+# VPM_DIR=/home/edoalvar/Dropbox/FLOWResearch/MyCodes/MyVPM/
 
 echo "Removing existing build"
 rm -rf $COMPILE_DIR
@@ -28,7 +28,7 @@ make install
 cd $THIS_DIR
 cp $COMPILE_DIR/3d/fmm ./fmm.so
 
-echo "(Replacing fmm.so at $VPM_DIR/src/tools/)"
-cp $COMPILE_DIR/3d/fmm $VPM_DIR/src/tools/fmm.so
+# echo "(Replacing fmm.so at $VPM_DIR/src/tools/)"
+# cp $COMPILE_DIR/3d/fmm $VPM_DIR/src/tools/fmm.so
 
 echo "Done!"
