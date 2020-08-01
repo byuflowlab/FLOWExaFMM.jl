@@ -1,5 +1,5 @@
 # FLOWExaFMM
-Julia wrapper of ExaFMM with modifications for a vortex solver.
+Julia wrapper of ExaFMM with modifications for a vortex solver. Developed and tested in Julia v1.4.2.
 
 First commit in this repo is a clone of https://github.com/EdoAlvarezR/MyExaFMM at 20c6603127dea2d3f2d8200917653a708e0e29f5, which was initiated as a clone of the FLOWVPM_integration branch from a [previous fork of ExaFMM](https://github.com/EdoAlvarezR/exafmm/tree/FLOWVPM_integration) on Aug 10th, 2018.
 
