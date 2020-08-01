@@ -1,9 +1,3 @@
-# @Author: Eduardo Alvarez <user>
-# @Date:   2017-08-24T12:53:31-06:00
-# @Email:  Edo.AlvarezR@gmail.com
-# @Last modified by:   user
-# @Last modified time: 2018-08-10T20:18:22-06:00
-
 COMPILE_DIR=build
 THIS_DIR=$(pwd)
 # VPM_DIR=/home/edoalvar/Dropbox/FLOWResearch/MyCodes/MyVPM/
