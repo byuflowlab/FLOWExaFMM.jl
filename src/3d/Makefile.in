@@ -103,8 +103,9 @@ DIST_COMMON = $(top_srcdir)/Makefile.am.include $(srcdir)/Makefile.in \
 # Use all possible debugging flags
 @EXAFMM_DEBUG_TRUE@am__append_11 = $(COMPILER_CXXFLAGS) -DEXAFMM_DEBUG
 @EXAFMM_DEBUG_TRUE@am__append_12 = $(COMPILER_FCFLAGS) -DEXAFMM_DEBUG
-bin_PROGRAMS = build_tree$(EXEEXT) traverse$(EXEEXT) kernel$(EXEEXT) \
-	fmm$(EXEEXT)
+# bin_PROGRAMS = build_tree$(EXEEXT) traverse$(EXEEXT) kernel$(EXEEXT) \
+# 	fmm$(EXEEXT)
+bin_PROGRAMS = fmm$(EXEEXT)
 subdir = 3d
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_compile_flag.m4 \
@@ -576,21 +577,19 @@ fmm_SOURCES = fmm.cxx
 fmm_CPPFLAGS = $(AM_CPPFLAGS) -DEXAFMM_EAGER
 
 # FLAGS FOR COMPILING FOR C++-JULIA WRAPPER
-cxxwrap_OBJFLAGS = -DJULIA_ENABLE_THREADING -Dhello_EXPORTS
-# cxxwrap_OBJFLAGS += -I/home/user/.julia/v0.5/CxxWrap/deps/src/jlcxx/include -I/usr/include/julia
-cxxwrap_OBJFLAGS += -I/home/edoalvar/.julia/v0.6/CxxWrap/deps/usr/include/ -I/home/edoalvar/Programs/julia-0.6.4/include/julia
-cxxwrap_OBJFLAGS += -march=native -Wunused-parameter -Wextra -Wreorder -std=c++11 -O3 -DNDEBUG -fPIC
+JLCXX_H=/home/edoalvar/.julia/artifacts/fd5dfb5dee87c41c238d98bd7ff2fdd4f307e824/include
+JULIA_H=/home/edoalvar/Programs/julia-1.4.2/include/julia
+JLCXX_LIB=/home/edoalvar/.julia/artifacts/fd5dfb5dee87c41c238d98bd7ff2fdd4f307e824/lib/libcxxwrap_julia.so.0.8.0
+JULIA_LIB=/home/edoalvar/Programs/julia-1.4.2/lib/libjulia.so.1
 
-# cxxwrap_LINKFLAGS = -fPIC  -march=native -Wunused-parameter -Wextra -Wreorder
-# cxxwrap_LINKFLAGS += -std=c++11 -O3 -DNDEBUG  -shared -Wl,
-# cxxwrap_LINKFLAGS += /home/user/.julia/v0.5/CxxWrap/deps/usr/lib/libjlcxx.so.0.1.1
-# cxxwrap_LINKFLAGS +=  -ljulia -Wl,-rpath,/home/user/.julia/v0.5/CxxWrap/deps/builds/jlcxx:
-# cxxwrap_LINKFLAGS = /home/user/.julia/v0.5/CxxWrap/deps/usr/lib/libjlcxx.so.0.1.1 -ljulia
-cxxwrap_LINKFLAGS = /home/edoalvar/.julia/v0.6/CxxWrap/deps/usr/lib/libcxxwrap_julia.so.0.2.2 #-ljulia
-# cxxwrap_LINKFLAGS += -Wl,-rpath,/home/user/.julia/v0.5/CxxWrap/deps/builds/jlcxx:
-cxxwrap_LINKFLAGS += -Wl,-rpath,/home/edoalvar/.julia/v0.6/CxxWrap/deps/builds/jlcxx:
+cxxwrap_OBJFLAGS = -DJULIA_ENABLE_THREADING -Dhello_EXPORTS
+cxxwrap_OBJFLAGS += -I${JLCXX_H} -I${JULIA_H}
+cxxwrap_OBJFLAGS += -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG -fPIC
+
+cxxwrap_LINKFLAGS = ${JLCXX_LIB}
 # Comments this line out to make it executable
-cxxwrap_LINKFLAGS += -fPIC  -march=native -Wunused-parameter -Wextra -Wreorder -std=c++11 -O3 -DNDEBUG  -shared
+cxxwrap_LINKFLAGS += -fPIC  -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG  -shared
+cxxwrap_LINKFLAGS += -Wl,-rpath,: ${JLCXX_LIB} ${JULIA_LIB}
 
 TESTS = $(bin_PROGRAMS)
 all: all-am

@@ -46,6 +46,43 @@ namespace exafmm {
     // real_t q;                                   //!< Charge
     // real_t p;                                   //!< Potential
     // vec3 F;                                     //!< Force
+
+    // Functions for exposing internal variables to Julia (allowing to modify them from Julia)
+    real_t* get_Xref_aux() { return this->X; }
+    jlcxx::ArrayRef<real_t, 1> get_Xref() { return jlcxx::ArrayRef<real_t>(get_Xref_aux(), 3); }
+
+    real_t* get_qref_aux() { return this->q; }
+    jlcxx::ArrayRef<real_t, 1> get_qref() { return jlcxx::ArrayRef<real_t>(get_qref_aux(), 3); }
+
+    real_t* get_vortref_aux() { return this->vort; }
+    jlcxx::ArrayRef<real_t, 1> get_vortref() { return jlcxx::ArrayRef<real_t>(get_vortref_aux(), 3); }
+
+    real_t get_sigma() { return this->sigma; }
+    real_t get_vol() { return this->vol; }
+    int get_index() { return this->index; }
+
+    real_t* get_pref_aux() { return this->p; }
+    jlcxx::ArrayRef<real_t, 1> get_pref() { return jlcxx::ArrayRef<real_t>(get_pref_aux(), 3); }
+
+    real_t* get_Jref_aux() { return this->J; }
+    jlcxx::ArrayRef<real_t, 2> get_Jref() { return jlcxx::ArrayRef<real_t, 2>(get_Jref_aux(), 3, 3); }
+
+    real_t* get_dJdx1ref_aux() { return this->dJdx1; }
+    jlcxx::ArrayRef<real_t, 2> get_dJdx1ref() { return jlcxx::ArrayRef<real_t, 2>(get_dJdx1ref_aux(), 3, 3); }
+
+    real_t* get_dJdx2ref_aux() { return this->dJdx2; }
+    jlcxx::ArrayRef<real_t, 2> get_dJdx2ref() { return jlcxx::ArrayRef<real_t, 2>(get_dJdx2ref_aux(), 3, 3); }
+
+    real_t* get_dJdx3ref_aux() { return this->dJdx3; }
+    jlcxx::ArrayRef<real_t, 2> get_dJdx3ref() { return jlcxx::ArrayRef<real_t, 2>(get_dJdx3ref_aux(), 3, 3); }
+
+    real_t* get_pseref_aux() { return this->pse; }
+    jlcxx::ArrayRef<real_t, 1> get_pseref() { return jlcxx::ArrayRef<real_t>(get_pseref_aux(), 3); }
+
+    // Functions for setting internal variables that can't be exposed to Julia
+    void set_sigma(const real_t v){this->sigma = v;}
+    void set_vol(const real_t v){this->vol = v;}
+    void set_index(const int v){this->index = v;}
   };
   typedef std::vector<Body> Bodies;             //!< Vector of bodies
 
