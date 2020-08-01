@@ -26,4 +26,7 @@ function __init__()
     @initcxx
 end
 
+# Type of Body reference
+const BodyRef = CxxWrap.CxxWrapCore.CxxPtr{Body}
+
 end # END OF MODULE

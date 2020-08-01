@@ -69,6 +69,15 @@ std::string greet()
    return "hello, world";
 }
 
+// ! Overwrite the target body with the source body
+void overwriteBody(Bodies & bodies, int trg, int src){
+  bodies[trg].X = bodies[src].X;
+  bodies[trg].q = bodies[src].q;
+  bodies[trg].sigma = bodies[src].sigma;
+  bodies[trg].vol = bodies[src].vol;
+  bodies[trg].index = bodies[src].index;
+}
+
 // Exposing types and functions to Julia
 JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
 {
@@ -94,5 +103,6 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
     mod.method("initBodiesZero", &initBodiesZero);
     mod.method("genBodies", &genBodies);
     mod.method("getBody", &getBody);
+    mod.method("overwriteBody", &overwriteBody);
     mod.method("greet", &greet);
 }
