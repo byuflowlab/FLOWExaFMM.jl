@@ -5,5 +5,6 @@ First commit in this repo is a clone of https://github.com/EdoAlvarezR/MyExaFMM 
 
 # Authorship
 ExaFMM (https://github.com/exafmm) was created and developed by Rio Yokota and Lorena Barba and licensed as BSD 3-Clause.
-FLOWExaFMM is a modified version of ExaFMM by Eduardo J. Alvarez (Edo.AlvarezR@gmail.com) at BYU's FLOW Lab, to be used in a viscous vortex particle code, and wrapped for the Julia language.
+FLOWExaFMM is a version of ExaFMM with modifications by Eduardo J. Alvarez (Edo.AlvarezR@gmail.com) at BYU's FLOW Lab, to be used in a viscous vortex particle code, and wrapped for the Julia language.
+
 FLOWExaFMM preserves the same BSD 3-Clause license of the original code.

@@ -8,6 +8,7 @@
  */
 
  #include "jlcxx/jlcxx.hpp"  //C++ wrapper for julia
+
  // ExaFMM modules
 #include "args.h"
 #include "build_tree.h"
@@ -30,9 +31,6 @@ using namespace exafmm;
 #include <string>
 
 #define M_PIl          3.141592653589793238462643383279502884L
-
-
-
 
 
 //! Initialize bodies with zero/null values
