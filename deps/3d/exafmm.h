@@ -51,6 +51,10 @@ namespace exafmm {
     real_t* get_Xref_aux() { return this->X; }
     jlcxx::ArrayRef<real_t, 1> get_Xref() { return jlcxx::ArrayRef<real_t>(get_Xref_aux(), 3); }
 
+    real_t get_X1() { return this->X[0]; }
+    real_t get_X2() { return this->X[1]; }
+    real_t get_X3() { return this->X[2]; }
+
     real_t* get_qref_aux() { return this->q; }
     jlcxx::ArrayRef<real_t, 1> get_qref() { return jlcxx::ArrayRef<real_t>(get_qref_aux(), 3); }
 
