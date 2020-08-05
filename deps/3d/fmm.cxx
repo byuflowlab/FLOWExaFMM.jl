@@ -78,34 +78,70 @@ void overwriteBody(Bodies & bodies, int trg, int src){
   bodies[trg].index = bodies[src].index;
 }
 
+bool getPrecision(){
+  return single_prec;
+}
+
 // Exposing types and functions to Julia
 JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
 {
     mod.add_type<Body>("Body")
       .constructor()
+
       .method("get_Xref", &Body::get_Xref)
-      .method("get_X1", &Body::get_X1)
-      .method("get_X2", &Body::get_X2)
-      .method("get_X3", &Body::get_X3)
+      .method("get_Xi", &Body::get_Xi)
+      .method("set_Xi", &Body::set_Xi)
+
       .method("get_qref", &Body::get_qref)
+      .method("get_qi", &Body::get_qi)
+      .method("set_qi", &Body::set_qi)
+
       .method("get_vortref", &Body::get_vortref)
-      .method("get_sigma", &Body::get_sigma)
-      .method("get_vol", &Body::get_vol)
-      .method("get_index", &Body::get_index)
+      .method("get_vorti", &Body::get_vorti)
+      .method("set_vorti", &Body::set_vorti)
+
+      .method("get_sigmaref", &Body::get_sigmaref)
+      .method("get_sigmai", &Body::get_sigmai)
+      .method("set_sigmai", &Body::set_sigmai)
+
+      .method("get_volref", &Body::get_volref)
+      .method("get_voli", &Body::get_voli)
+      .method("set_voli", &Body::set_voli)
+
+      .method("get_indexref", &Body::get_indexref)
+      .method("get_indexi", &Body::get_indexi)
+      .method("set_indexi", &Body::set_indexi)
+
       .method("get_pref", &Body::get_pref)
+      .method("get_pi", &Body::get_pi)
+      .method("set_pi", &Body::set_pi)
+
       .method("get_Jref", &Body::get_Jref)
+      .method("get_Ji", &Body::get_Ji)
+      .method("set_Ji", &Body::set_Ji)
+
       .method("get_dJdx1ref", &Body::get_dJdx1ref)
+      .method("get_dJdx1i", &Body::get_dJdx1i)
+      .method("set_dJdx1i", &Body::set_dJdx1i)
+
       .method("get_dJdx2ref", &Body::get_dJdx2ref)
+      .method("get_dJdx2i", &Body::get_dJdx2i)
+      .method("set_dJdx2i", &Body::set_dJdx2i)
+
       .method("get_dJdx3ref", &Body::get_dJdx3ref)
+      .method("get_dJdx3i", &Body::get_dJdx3i)
+      .method("set_dJdx3i", &Body::set_dJdx3i)
+
       .method("get_pseref", &Body::get_pseref)
-      .method("set_sigma", &Body::set_sigma)
-      .method("set_vol", &Body::set_vol)
-      .method("set_index", &Body::set_index);
+      .method("get_psei", &Body::get_psei)
+      .method("set_psei", &Body::set_psei);
 
     mod.add_type<Bodies>("Bodies");
-    mod.method("initBodiesZero", &initBodiesZero);
     mod.method("genBodies", &genBodies);
     mod.method("getBody", &getBody);
     mod.method("overwriteBody", &overwriteBody);
+
+    mod.method("getPrecision", &getPrecision);
+
     mod.method("greet", &greet);
 }

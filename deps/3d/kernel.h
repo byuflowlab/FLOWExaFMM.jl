@@ -278,7 +278,7 @@ namespace exafmm {
         if (R2 != 0) {
           real_t invR2 = 1.0 / R2;
           real_t invR3 = 1.0 / R2 / sqrt(R2);
-          real_t sgm2 = Bj[j].sigma*Bj[j].sigma;
+          real_t sgm2 = Bj[j].sigma[0]*Bj[j].sigma[0];
           real_t xi = R2/2/sgm2;
           real_t sqrtxi = sqrt(xi);
           real_t gsgm = erf(sqrtxi) - SQRT4pi*sqrtxi*std::exp(-xi);
@@ -396,10 +396,10 @@ namespace exafmm {
         vec3 dX = Bi[i].X - Bj[j].X;
         real_t R2 = norm(dX);
         if (R2 != 0) {
-          real_t sgm2 = Bj[j].sigma*Bj[j].sigma;
+          real_t sgm2 = Bj[j].sigma[0]*Bj[j].sigma[0];
           real_t aux2 = R2 / (sgm2);
-          real_t aux3 = (aux2 + 1.5) / std::pow(aux2 + 1, 1.5) / Bj[j].sigma;
-          real_t aux4 = (aux2 + 2.5) / std::pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma);
+          real_t aux3 = (aux2 + 1.5) / std::pow(aux2 + 1, 1.5) / Bj[j].sigma[0];
+          real_t aux4 = (aux2 + 2.5) / std::pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma[0]);
           vec3 aux1 = dX * aux4;
           for(int ind=0; ind<3; ind++){
             p[ind] += Bj[j].q[ind] * aux3;
@@ -408,10 +408,10 @@ namespace exafmm {
             J[ind*3 + 2] += aux1[2] * Bj[j].q[ind];
           }
           // Particle Strength Exchange
-          real_t sgmij2 = (Bi[i].sigma*Bi[i].sigma + Bj[j].sigma*Bj[j].sigma)/2;
+          real_t sgmij2 = (Bi[i].sigma[0]*Bi[i].sigma[0] + Bj[j].sigma[0]*Bj[j].sigma[0])/2;
           real_t dnmntr = std::pow(sgmij2, 2.5) * std::pow(R2/sgmij2 + 1, 4.5);
           for(int ind=0; ind<3; ind++){
-            pse[ind] += (Bi[i].vol*Bj[j].q[ind] - Bj[j].vol*Bi[i].q[ind])/dnmntr;
+            pse[ind] += (Bi[i].vol[0]*Bj[j].q[ind] - Bj[j].vol[0]*Bi[i].q[ind])/dnmntr;
           }
         }
       }
@@ -433,11 +433,11 @@ namespace exafmm {
         vec3 dX = Bi[i].X - Bj[j].X;
         real_t R2 = norm(dX);
         if (R2 != 0) {
-          real_t sgm2 = Bj[j].sigma*Bj[j].sigma;
+          real_t sgm2 = Bj[j].sigma[0]*Bj[j].sigma[0];
           real_t aux2 = R2 / (sgm2);
-          real_t aux3 = (aux2 + 1.5) / std::pow(aux2 + 1, 1.5) / Bj[j].sigma;
-          real_t aux4 = (aux2 + 2.5) / std::pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma);
-          real_t aux5 = (3*aux2+10.5) / std::pow(aux2 + 1, 3.5) / (sgm2*sgm2*Bj[j].sigma);
+          real_t aux3 = (aux2 + 1.5) / std::pow(aux2 + 1, 1.5) / Bj[j].sigma[0];
+          real_t aux4 = (aux2 + 2.5) / std::pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma[0]);
+          real_t aux5 = (3*aux2+10.5) / std::pow(aux2 + 1, 3.5) / (sgm2*sgm2*Bj[j].sigma[0]);
           vec3 aux1 = dX * aux4;
           for(int ind=0; ind<3; ind++){
           // Potential p[i] = Fi
@@ -457,10 +457,10 @@ namespace exafmm {
             Bi[i].dJdx3[ind*3 + 1] += Bj[j].q[ind]*(dX[1]*dX[2]*aux5);
             Bi[i].dJdx3[ind*3 + 2] += Bj[j].q[ind]*(dX[2]*dX[2]*aux5 - aux4);
           }
-          real_t sgmij2 = (Bi[i].sigma*Bi[i].sigma + Bj[j].sigma*Bj[j].sigma)/2;
+          real_t sgmij2 = (Bi[i].sigma[0]*Bi[i].sigma[0] + Bj[j].sigma[0]*Bj[j].sigma[0])/2;
           real_t dnmntr = std::pow(sgmij2, 2.5) * std::pow(R2/sgmij2 + 1, 4.5);
           for(int ind=0; ind<3; ind++){
-            pse[ind] += (Bi[i].vol*Bj[j].q[ind] - Bj[j].vol*Bi[i].q[ind])/dnmntr;
+            pse[ind] += (Bi[i].vol[0]*Bj[j].q[ind] - Bj[j].vol[0]*Bi[i].q[ind])/dnmntr;
           }
         }
       }
@@ -488,10 +488,10 @@ namespace exafmm {
           dX[H_ind] += cplx(0, COMPLEX_STEP);
           cplx R2 = norm(dX);
           if (abs(double(R2)) > EPS) {
-            real_t sgm2 = Bj[j].sigma*Bj[j].sigma;
+            real_t sgm2 = Bj[j].sigma[0]*Bj[j].sigma[0];
             cplx aux2 = R2 / (sgm2);
-            cplx aux3 = (aux2 + 1.5) / pow(aux2 + 1, 1.5) / Bj[j].sigma;
-            cplx aux4 = (aux2 + 2.5) / pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma);
+            cplx aux3 = (aux2 + 1.5) / pow(aux2 + 1, 1.5) / Bj[j].sigma[0];
+            cplx aux4 = (aux2 + 2.5) / pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma[0]);
             cvec3 aux1;
             for(int ind=0; ind<3; ind++) aux1[ind] = dX[ind] * aux4;
             for(int ind=0; ind<3; ind++){
@@ -812,7 +812,7 @@ namespace exafmm {
         real_t R2 = norm(Bi[i].X - Bj[j].X);
 
         if (R2 != 0) {
-          real_t S2 = 2 * Bj[j].sigma * Bj[j].sigma;
+          real_t S2 = 2 * Bj[j].sigma[0] * Bj[j].sigma[0];
           real_t aux1 = std::exp(-R2 / S2) / (M_PI * S2) / sqrt(M_PI * S2);
             p += Bj[j].q * aux1;
         }
@@ -835,8 +835,8 @@ namespace exafmm {
         real_t R2 = norm(Bi[i].X - Bj[j].X);
 
         if (R2 != 0) {
-          real_t aux1 = R2 / (Bj[j].sigma*Bj[j].sigma);
-          real_t aux2 = 7.5 / std::pow(aux1 + 1, 3.5) / (Bj[j].sigma*Bj[j].sigma*Bj[j].sigma);
+          real_t aux1 = R2 / (Bj[j].sigma[0]*Bj[j].sigma[0]);
+          real_t aux2 = 7.5 / std::pow(aux1 + 1, 3.5) / (Bj[j].sigma[0]*Bj[j].sigma[0]*Bj[j].sigma[0]);
           p += Bj[j].q * aux2 / (M_PI*4);
         }
 

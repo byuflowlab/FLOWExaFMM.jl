@@ -20,7 +20,7 @@ namespace exafmm {
     if (Cj->numChilds==0){
       float_t weights =  0.0;
       for (Body * B=Cj->body; B!=Cj->body+Cj->numBodies; B++) {
-        Cj->sigma += norm(B->q)*B->sigma;
+        Cj->sigma += norm(B->q)*B->sigma[0];
         weights += norm(B->q);
       }
       Cj->sigma = Cj->sigma/weights;
