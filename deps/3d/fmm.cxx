@@ -82,6 +82,90 @@ bool getPrecision(){
   return single_prec;
 }
 
+void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t phi,
+                bool verbose, int p2p_type, int l2p_type, bool rbf){
+
+    // Dummy argument values
+    char aux0 = 'a';
+    char * aux1 = &aux0;
+    int argc = 1;
+    char ** argv = &aux1;
+
+    // Overwrite initialization values of ExaFMM
+    if(verbose) std::cout << "Defining FMM parameters\n";
+    if(verbose) std::cout << "-------------------------------------\n";
+    P = p;
+    THETA = theta;
+    PHI = phi;
+    NCRIT = ncrit;
+    VERBOSE = verbose;
+    P2P_TYPE = p2p_type;
+    L2P_TYPE = l2p_type;
+    RBF = rbf;
+    const int numBodies = np;
+    if(verbose) std::cout << "\tP:\t"<<P<<"\n\tTheta:\t"<<THETA<<"\n\tPhi:\t"<<PHI;
+    if(verbose) std::cout << "\n\tncrit:\t"<<NCRIT<<"\n\tnumBodies:\t"<<numBodies<<"\n";
+    if(verbose) std::cout << "\n\tP2P_TYPE:\t"<<P2P_TYPE<<"\n\tL2P_TYPE:\t"<<L2P_TYPE<<"\n";
+    if(verbose) std::cout << "-------------------------------------\n";
+
+    if(verbose){
+      std::cout << "-------------------------------------\n";
+      for(int i=0; i<np; i++){
+          std::cout << "Particle #" << i+1 <<"\n";
+          std::cout << "\tindex = " << bodies[i].index[0] << "\n";
+          std::cout << "\tsigma = " << bodies[i].sigma[0] << "\n";
+          std::cout << "\tX = [" << bodies[i].X[0]<<", "<<bodies[i].X[1]<<", "<<bodies[i].X[2]<<"]\n";
+          std::cout << "\tq = [" << bodies[i].q[0]<<", "<<bodies[i].q[1]<<", "<<bodies[i].q[2]<<"]\n";
+          std::cout << "\tJ = [";
+          for(int j=0; j<9; j++){
+              std::cout << bodies[i].J[j];
+              if(j<8) std::cout << ", ";
+              else std::cout << "]\n";
+          }
+      }
+      std::cout << "-------------------------------------\n";
+    }
+
+    // Initialize the particles with 0 potential and force
+    if(verbose) std::cout << "Initializing particles\n";
+    initTarget(bodies, np);
+
+    // Build the tree
+    if(verbose) std::cout << "Building tree\n";
+    Cells cells = buildTree(bodies, np);
+
+    // Calculate FMM
+    if(verbose) std::cout << "Calculating FMM\n";
+
+    initKernel();
+    upwardPass(cells);
+    // clock_t begin = std::clock();
+    horizontalPass(cells, cells);
+    // clock_t end = std::clock();
+    // std::cout << "Time:"<<double(end-begin)/ CLOCKS_PER_SEC<<"\n";
+    downwardPass(cells);
+
+    if(verbose){
+      std::cout << "-------------------------------------\n";
+      for(int i=0; i<np; i++){
+          std::cout << "Particle #" << i+1 <<"\n";
+          std::cout << "\tindex = " << bodies[i].index[0] << "\n";
+          std::cout << "\tX = [" << bodies[i].X[0]<<", "<<bodies[i].X[1]<<", "<<bodies[i].X[2]<<"]\n";
+          std::cout << "\tq = [" << bodies[i].q[0]<<", "<<bodies[i].q[1]<<", "<<bodies[i].q[2]<<"]\n";
+          std::cout << "\tJ = [";
+          for(int j=0; j<9; j++){
+              std::cout << bodies[i].J[j];
+              if(j<8) std::cout << ", ";
+              else std::cout << "]\n";
+          }
+      }
+      std::cout << "-------------------------------------\n";
+    }
+
+    // Calculate FMM
+    if(verbose) std::cout << "Done!\n";
+}
+
 // Exposing types and functions to Julia
 JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
 {
@@ -142,6 +226,8 @@ JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
     mod.method("overwriteBody", &overwriteBody);
 
     mod.method("getPrecision", &getPrecision);
+
+    mod.method("calculate", &calculate);
 
     mod.method("greet", &greet);
 }

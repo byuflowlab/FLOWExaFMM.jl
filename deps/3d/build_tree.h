@@ -44,12 +44,12 @@ namespace exafmm {
   }
 
   //! Get bounding box of bodies
-  void getBounds(Bodies & bodies, real_t & R0, vec3 & X0) {
+  void getBounds(Bodies & bodies, int nb, real_t & R0, vec3 & X0) {
     vec3 Xmin = bodies[0].X;
     vec3 Xmax = bodies[0].X;
-    for (size_t b=0; b<bodies.size(); b++) {
-      Xmin = min(bodies[b].X, Xmin);
-      Xmax = max(bodies[b].X, Xmax);
+    for (int i=0; i<nb; i++) {
+      Xmin = min(bodies[i].X, Xmin);
+      Xmax = max(bodies[i].X, Xmax);
     }
     X0 = (Xmax + Xmin) / 2;
     R0 = fmax(max(X0-Xmin), max(Xmax-X0));
@@ -126,15 +126,15 @@ namespace exafmm {
     }
   }
 
-  Cells buildTree(Bodies & bodies) {
+  Cells buildTree(Bodies & bodies, int nb) {
     real_t R0;
     vec3 X0;
-    getBounds(bodies, R0, X0);
+    getBounds(bodies, nb, R0, X0);
     Bodies buffer = bodies;
     Cells cells(1);
-    cells.reserve(bodies.size());
+    cells.reserve(nb);
 
-    buildCells(&bodies[0], &buffer[0], 0, bodies.size(), &cells[0], cells, X0, R0);
+    buildCells(&bodies[0], &buffer[0], 0, nb, &cells[0], cells, X0, R0);
 
     calcSigmas(cells);
 

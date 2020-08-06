@@ -147,44 +147,44 @@ namespace exafmm {
   }
 
   //! Initialize target values
-  void initTarget(Bodies & bodies) {
-    for (size_t b=0; b!=bodies.size(); ++b) {
-      bodies[b].p = 0;
-      bodies[b].J = 0;
-      bodies[b].dJdx1 = 0;
-      bodies[b].dJdx2 = 0;
-      bodies[b].dJdx3 = 0;
-      bodies[b].pse = 0;
+  void initTarget(Bodies & bodies, int nb) {
+    for (int i=0; i<nb; ++i) {
+      bodies[i].p = 0;
+      bodies[i].J = 0;
+      bodies[i].dJdx1 = 0;
+      bodies[i].dJdx2 = 0;
+      bodies[i].dJdx3 = 0;
+      bodies[i].pse = 0;
     }
   }
 
-  //! Initialize dsitribution, source & target value of bodies
-  Bodies initBodies(int numBodies, const char * distribution,
-                    int mpirank=0, int mpisize=1, int numSplit=1) {
-    Bodies bodies;
-    switch (distribution[0]) {
-      case 'l':
-        bodies = lattice(numBodies,mpirank,mpisize);
-        break;
-      case 'c':
-        bodies = cube(numBodies,mpirank,numSplit);
-        break;
-      case 's':
-        bodies = sphere(numBodies,mpirank,numSplit);
-        break;
-      case 'o':
-        bodies = octant(numBodies,mpirank,numSplit);
-        break;
-      case 'p':
-        bodies = plummer(numBodies,mpirank,numSplit);
-        break;
-      default:
-        fprintf(stderr, "Unknown data distribution %s\n", distribution);
-    }
-    initSource(bodies,mpirank,numSplit);
-    initTarget(bodies);
-    return bodies;
-  }
+  // //! Initialize dsitribution, source & target value of bodies
+  // Bodies initBodies(int numBodies, const char * distribution,
+  //                   int mpirank=0, int mpisize=1, int numSplit=1) {
+  //   Bodies bodies;
+  //   switch (distribution[0]) {
+  //     case 'l':
+  //       bodies = lattice(numBodies,mpirank,mpisize);
+  //       break;
+  //     case 'c':
+  //       bodies = cube(numBodies,mpirank,numSplit);
+  //       break;
+  //     case 's':
+  //       bodies = sphere(numBodies,mpirank,numSplit);
+  //       break;
+  //     case 'o':
+  //       bodies = octant(numBodies,mpirank,numSplit);
+  //       break;
+  //     case 'p':
+  //       bodies = plummer(numBodies,mpirank,numSplit);
+  //       break;
+  //     default:
+  //       fprintf(stderr, "Unknown data distribution %s\n", distribution);
+  //   }
+  //   initSource(bodies,mpirank,numSplit);
+  //   initTarget(bodies);
+  //   return bodies;
+  // }
 
   //! Sample a subset of target bodies
   void sampleBodies(Bodies & bodies, int numTargets) {
