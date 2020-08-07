@@ -73,8 +73,16 @@ namespace exafmm {
         for (int i=begin; i<end; i++) {
           buffer[i].X = bodies[i].X;
           buffer[i].q = bodies[i].q;
+          // buffer[i].vort = bodies[i].vort;
           buffer[i].sigma = bodies[i].sigma;
+          buffer[i].vol = bodies[i].vol;
           buffer[i].index = bodies[i].index;
+          // buffer[i].p = bodies[i].p;
+          // buffer[i].J = bodies[i].J;
+          // buffer[i].dJdx1 = bodies[i].dJdx1;
+          // buffer[i].dJdx2 = bodies[i].dJdx2;
+          // buffer[i].dJdx3 = bodies[i].dJdx3;
+          // buffer[i].pse = bodies[i].pse;
         }
       }
       return;
@@ -102,8 +110,16 @@ namespace exafmm {
       int octant = (x[0] > X[0]) + ((x[1] > X[1]) << 1) + ((x[2] > X[2]) << 2);
       buffer[counter[octant]].X = bodies[i].X;
       buffer[counter[octant]].q = bodies[i].q;
+      // buffer[counter[octant]].vort = bodies[i].vort;
       buffer[counter[octant]].sigma = bodies[i].sigma;
       buffer[counter[octant]].index = bodies[i].index;
+      buffer[counter[octant]].vol = bodies[i].vol;
+      // buffer[counter[octant]].p = bodies[i].p;
+      // buffer[counter[octant]].J = bodies[i].J;
+      // buffer[counter[octant]].dJdx1 = bodies[i].dJdx1;
+      // buffer[counter[octant]].dJdx2 = bodies[i].dJdx2;
+      // buffer[counter[octant]].dJdx3 = bodies[i].dJdx3;
+      // buffer[counter[octant]].pse = bodies[i].pse;
       counter[octant]++;
     }
     //! Loop over children and recurse

@@ -73,9 +73,18 @@ std::string greet()
 void overwriteBody(Bodies & bodies, int trg, int src){
   bodies[trg].X = bodies[src].X;
   bodies[trg].q = bodies[src].q;
+  // bodies[trg].vort = bodies[src].vort;
   bodies[trg].sigma = bodies[src].sigma;
   bodies[trg].vol = bodies[src].vol;
   bodies[trg].index = bodies[src].index;
+  // bodies[trg].p = bodies[src].p;
+  // bodies[trg].J = bodies[src].J;
+  // bodies[trg].dJdx1 = bodies[src].dJdx1;
+  // bodies[trg].dJdx2 = bodies[src].dJdx2;
+  // bodies[trg].dJdx3 = bodies[src].dJdx3;
+  // bodies[trg].pse = bodies[src].pse;
+
+
 }
 
 bool getPrecision(){
