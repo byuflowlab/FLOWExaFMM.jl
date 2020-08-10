@@ -439,6 +439,21 @@ namespace exafmm {
           real_t aux4 = (aux2 + 2.5) / std::pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma[0]);
           real_t aux5 = (3*aux2+10.5) / std::pow(aux2 + 1, 3.5) / (sgm2*sgm2*Bj[j].sigma[0]);
           vec3 aux1 = dX * aux4;
+
+          // std::ostringstream oss;
+          // oss << "Jexa_ncrit" << NCRIT << "-" << Bi[i].index[0] << "-" << Bj[j].index[0] << ".csv";
+          // std::string fname = oss.str();
+          // ofstream myfile;
+          // myfile.open(fname);
+          // myfile.precision(12);
+          // for(int ind=0; ind<3; ind++){
+          //   myfile << aux1[0] * Bj[j].q[ind] << " ";
+          //   myfile << aux1[1] * Bj[j].q[ind] << " ";
+          //   myfile << aux1[2] * Bj[j].q[ind];
+          //   if(ind!=2) myfile << " ";
+          // }
+          // myfile.close();
+
           for(int ind=0; ind<3; ind++){
           // Potential p[i] = Fi
             p[ind] += Bj[j].q[ind] * aux3;

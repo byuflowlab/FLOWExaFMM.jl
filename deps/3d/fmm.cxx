@@ -9,6 +9,15 @@
 
  #include "jlcxx/jlcxx.hpp"  //C++ wrapper for julia
 
+
+ // Extra tools for interacting
+ #include <iostream>
+ #include <fstream>
+ #include <sstream>
+ #include <string>
+ #include <typeinfo>  //for 'typeid' to work
+
+
  // ExaFMM modules
 #include "args.h"
 #include "build_tree.h"
@@ -23,12 +32,6 @@
 #include "verify.h"
 using namespace exafmm;
 
-// Extra tools for interacting
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <typeinfo>  //for 'typeid' to work
-#include <string>
 
 #define M_PIl          3.141592653589793238462643383279502884L
 
@@ -83,8 +86,71 @@ void overwriteBody(Bodies & bodies, int trg, int src){
   // bodies[trg].dJdx2 = bodies[src].dJdx2;
   // bodies[trg].dJdx3 = bodies[src].dJdx3;
   // bodies[trg].pse = bodies[src].pse;
+}
 
+void sortBodies(Bodies & bodies, int nb){
+  vec3 X;                                     //!< Position
+  vec3 q;                                     //!< Vector charge
+  vec3 vort;                                  //!< Vorticity for RBF
+  vec1 sigma;                                 //!< Vortex blob radius
+  vec1 vol;                                   //!< Vortex particle volume (it will also use this for RBF)
+  vec1int index;                              //!< Index of this body
+  vec3 p;                                     //!< Vector potential
+  vec9 J;                                     //!< Jacobian
+  vec9 dJdx1;                                 //!< Partial of Jacobian to x1
+  vec9 dJdx2;                                 //!< Partial of Jacobian to x2
+  vec9 dJdx3;                                 //!< Partial of Jacobian to x3
+  vec3 pse;                                   //!< Particle Strength Exchange
+  int ind;
 
+  for(int i=0; i<nb; i++){ // Iterate over array elements
+    while(bodies[i].index[0] != i){ // If position has the wrong element
+
+      // Lift up element in this position
+      X = bodies[i].X;
+      q = bodies[i].q;
+      vort = bodies[i].vort;
+      sigma = bodies[i].sigma;
+      vol = bodies[i].vol;
+      index = bodies[i].index;
+      p = bodies[i].p;
+      J = bodies[i].J;
+      dJdx1 = bodies[i].dJdx1;
+      dJdx2 = bodies[i].dJdx2;
+      dJdx3 = bodies[i].dJdx3;
+      pse = bodies[i].pse;
+
+      ind = bodies[i].index[0];
+
+      // Move element that is in the position where this element should go to this position
+      bodies[i].X = bodies[ind].X;
+      bodies[i].q = bodies[ind].q;
+      bodies[i].vort = bodies[ind].vort;
+      bodies[i].sigma = bodies[ind].sigma;
+      bodies[i].vol = bodies[ind].vol;
+      bodies[i].index = bodies[ind].index;
+      bodies[i].p = bodies[ind].p;
+      bodies[i].J = bodies[ind].J;
+      bodies[i].dJdx1 = bodies[ind].dJdx1;
+      bodies[i].dJdx2 = bodies[ind].dJdx2;
+      bodies[i].dJdx3 = bodies[ind].dJdx3;
+      bodies[i].pse = bodies[ind].pse;
+
+      // Place this element where it should go
+      bodies[ind].X = X;
+      bodies[ind].q = q;
+      bodies[ind].vort = vort;
+      bodies[ind].sigma = sigma;
+      bodies[ind].vol = vol;
+      bodies[ind].index = index;
+      bodies[ind].p = p;
+      bodies[ind].J = J;
+      bodies[ind].dJdx1 = dJdx1;
+      bodies[ind].dJdx2 = dJdx2;
+      bodies[ind].dJdx3 = dJdx3;
+      bodies[ind].pse = pse;
+    }
+  }
 }
 
 bool getPrecision(){
@@ -92,7 +158,7 @@ bool getPrecision(){
 }
 
 void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t phi,
-                bool verbose, int p2p_type, int l2p_type, bool rbf){
+                bool verbose, int p2p_type, int l2p_type, bool rbf, bool sort=true){
 
     // Dummy argument values
     char aux0 = 'a';
@@ -117,8 +183,17 @@ void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t p
     if(verbose) std::cout << "\n\tP2P_TYPE:\t"<<P2P_TYPE<<"\n\tL2P_TYPE:\t"<<L2P_TYPE<<"\n";
     if(verbose) std::cout << "-------------------------------------\n";
 
+    // Index particles according to array position
+    if(sort){
+      for(int i=0; i<np; i++){
+        bodies[i].index[0] = i;
+      }
+    }
+
     if(verbose){
       std::cout << "-------------------------------------\n";
+      // std::cout << std::fixed;
+      std::cout << std::setprecision(17);
       for(int i=0; i<np; i++){
           std::cout << "Particle #" << i+1 <<"\n";
           std::cout << "\tindex = " << bodies[i].index[0] << "\n";
@@ -154,13 +229,21 @@ void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t p
     // std::cout << "Time:"<<double(end-begin)/ CLOCKS_PER_SEC<<"\n";
     downwardPass(cells);
 
+    // NOTE: If the bodies are not sorted back to their original position in the
+    //  memory, somehow the single vortex ring case falls apart due to small
+    //  floating-point-precision numerical randomness.
+    if(sort) sortBodies(bodies, np);
+
     if(verbose){
       std::cout << "-------------------------------------\n";
+      // std::cout << std::fixed;
+      std::cout << std::setprecision(17);
       for(int i=0; i<np; i++){
           std::cout << "Particle #" << i+1 <<"\n";
           std::cout << "\tindex = " << bodies[i].index[0] << "\n";
           std::cout << "\tX = [" << bodies[i].X[0]<<", "<<bodies[i].X[1]<<", "<<bodies[i].X[2]<<"]\n";
           std::cout << "\tq = [" << bodies[i].q[0]<<", "<<bodies[i].q[1]<<", "<<bodies[i].q[2]<<"]\n";
+          std::cout << "\ts = " << bodies[i].sigma[0] << "\n";
           std::cout << "\tJ = [";
           for(int j=0; j<9; j++){
               std::cout << bodies[i].J[j];
