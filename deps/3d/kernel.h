@@ -25,8 +25,8 @@ namespace exafmm {
   }
   void cart2sph(const cvec3 & dX, cplx & r, cplx & theta, cplx & phi) {
     r = sqrt(norm(dX));
-    theta = double(r)<=EPS ? cplx(0,0) : acos(dX[2] / r);
-    phi = double(r)<=EPS ? cplx(0,0) : atan2(dX[1], dX[0]);
+    theta = real_t(r)<=EPS ? cplx(0,0) : acos(dX[2] / r);
+    phi = real_t(r)<=EPS ? cplx(0,0) : atan2(dX[1], dX[0]);
   }
 
   //! Spherical to cartesian coordinates
@@ -48,7 +48,7 @@ namespace exafmm {
 
   //! Spherical to cartesian coordinates for CSDA
   void sph2cart(cplx r, cplx theta, cplx phi, const cvec3 & spherical, cvec3 & cartesian) {
-    if (double(r)<=EPS){
+    if (real_t(r)<=EPS){
       std::cout << "Logic Error: encountered spherical to cartesian transformation with r==0!"<<
                       " This is most likely due to L2P with P in center of L"<<"\n";
       throw std::invalid_argument( "Invalid r==0" );
@@ -164,7 +164,7 @@ namespace exafmm {
       return init_multicomplex(V.A, -V.B);
   }
   complex_t Re1(multicomplex V){
-    return complex_t(double(V.A), double(V.B));
+    return complex_t(real_t(V.A), real_t(V.B));
   }
   complex_t Im1(multicomplex V){
     return complex_t(imag(V.A), imag(V.B));
@@ -173,7 +173,7 @@ namespace exafmm {
   void evalMultipole(cplx rho, cplx alpha, cplx beta, multicomplex * Ynm, multicomplex * YnmTheta) {
     cplx x = cos(alpha);
     cplx y = sin(alpha);
-    cplx invY = (double(y)<=EPS) ? cplx(0,0) : 1 / y;
+    cplx invY = (real_t(y)<=EPS) ? cplx(0,0) : 1 / y;
     cplx fact = 1;
     cplx pn = 1;
     cplx rhom = 1;
@@ -502,11 +502,11 @@ namespace exafmm {
           for(int ind=0; ind<3; ind++) dX[ind] = Bi[i].X[ind] - Bj[j].X[ind];
           dX[H_ind] += cplx(0, COMPLEX_STEP);
           cplx R2 = norm(dX);
-          if (abs(double(R2)) > EPS) {
+          if (abs(real_t(R2)) > EPS) {
             real_t sgm2 = Bj[j].sigma[0]*Bj[j].sigma[0];
             cplx aux2 = R2 / (sgm2);
-            cplx aux3 = (aux2 + 1.5) / pow(aux2 + 1, 1.5) / Bj[j].sigma[0];
-            cplx aux4 = (aux2 + 2.5) / pow(aux2 + 1, 2.5) / (sgm2*Bj[j].sigma[0]);
+            cplx aux3 = (aux2 + real_t(1.5)) / pow(aux2 + 1, real_t(1.5)) / Bj[j].sigma[0];
+            cplx aux4 = (aux2 + real_t(2.5)) / pow(aux2 + 1, real_t(2.5)) / (sgm2*Bj[j].sigma[0]);
             cvec3 aux1;
             for(int ind=0; ind<3; ind++) aux1[ind] = dX[ind] * aux4;
             for(int ind=0; ind<3; ind++){
@@ -518,8 +518,8 @@ namespace exafmm {
           }
         }
         if(H_ind==0){
-          for(int ind=0; ind<3; ind++) Bi[i].p[ind] += double(p[ind]);
-          for(int ind=0; ind<9; ind++) Bi[i].J[ind] -= double(J[ind]);
+          for(int ind=0; ind<3; ind++) Bi[i].p[ind] += real_t(p[ind]);
+          for(int ind=0; ind<9; ind++) Bi[i].J[ind] -= real_t(J[ind]);
           for(int ind=0; ind<9; ind++) Bi[i].dJdx1[ind] -= imag(J[ind])/COMPLEX_STEP;
         }
         else if(H_ind==1){
@@ -725,7 +725,7 @@ namespace exafmm {
           int nms = n * (n + 1) / 2;
           if(H_ind==0){
             for(int ind=0; ind<3; ind++){
-              B->p[ind] += double((product(init_from_C1(Ci->L[ind][nms]), Ynm[nm])).A);}
+              B->p[ind] += real_t((product(init_from_C1(Ci->L[ind][nms]), Ynm[nm])).A);}
           }
           spherical1[0] += (product(init_from_C1(Ci->L[0][nms]), Ynm[nm])).A / r * n;
           spherical1[1] += (product(init_from_C1(Ci->L[0][nms]), YnmTheta[nm])).A;
@@ -738,7 +738,7 @@ namespace exafmm {
             nms = n * (n + 1) / 2 + m;
             if(H_ind==0){
               for(int ind=0; ind<3; ind++){
-                B->p[ind] += double(2 * (product(init_from_C1(Ci->L[ind][nms]), Ynm[nm])).A);}
+                B->p[ind] += real_t(2 * (product(init_from_C1(Ci->L[ind][nms]), Ynm[nm])).A);}
             }
             spherical1[0] += 2 * (product(init_from_C1(Ci->L[0][nms]), Ynm[nm])).A / r * n;
             spherical1[1] += 2 * (product(init_from_C1(Ci->L[0][nms]), YnmTheta[nm])).A;
@@ -756,7 +756,7 @@ namespace exafmm {
 
         if(H_ind==0){
           for(int ind=0; ind<3; ind++){
-            B->J[3*0 + ind] += double(cartesian[ind]);
+            B->J[3*0 + ind] += real_t(cartesian[ind]);
             B->dJdx1[3*0 + ind] += imag(cartesian[ind])/COMPLEX_STEP;
           }
         }
@@ -776,7 +776,7 @@ namespace exafmm {
 
         if(H_ind==0){
           for(int ind=0; ind<3; ind++){
-            B->J[3*1 + ind] += double(cartesian[ind]);
+            B->J[3*1 + ind] += real_t(cartesian[ind]);
             B->dJdx1[3*1 + ind] += imag(cartesian[ind])/COMPLEX_STEP;
           }
         }
@@ -796,7 +796,7 @@ namespace exafmm {
 
         if(H_ind==0){
           for(int ind=0; ind<3; ind++){
-            B->J[3*2 + ind] += double(cartesian[ind]);
+            B->J[3*2 + ind] += real_t(cartesian[ind]);
             B->dJdx1[3*2 + ind] += imag(cartesian[ind])/COMPLEX_STEP;
           }
         }

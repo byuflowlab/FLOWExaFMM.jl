@@ -30,8 +30,8 @@ namespace exafmm {
     int numBodies;                              //!< Number of bodies
     const char * path;                          //!< Path to save files
     int P;                                      //!< Order of expansions
-    double theta;                               //!< Multipole acceptance criterion
-    double phi;                                 //!< Multipole regularizing acceptance criterion
+    real_t theta;                               //!< Multipole acceptance criterion
+    real_t phi;                                 //!< Multipole regularizing acceptance criterion
     int verbose;                                //!< Verbose mode
 
   private:

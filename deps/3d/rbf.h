@@ -18,7 +18,7 @@ namespace exafmm {
     * itmax:      Maximum number of iterations.
     * tol:        Tolerance.
   */
-  void rbf(Bodies & bodies, Cells & cells, double** vortfield, int np,
+  void rbf(Bodies & bodies, Cells & cells, real_t** vortfield, int np,
                                                         int itmax, real_t tol) {
     // const int itmax = 5;
     // const float tol = 1e-3;

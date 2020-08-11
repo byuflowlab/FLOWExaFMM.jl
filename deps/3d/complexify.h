@@ -15,8 +15,15 @@
 using namespace std;
 
 
+#if EXAFMM_SINGLE
+typedef float real_t;                         //!< Floating point type is single precision
+#else
+typedef double real_t;                        //!< Floating point type is double precision
+#endif
+
+
 #ifndef HDRderivify
-inline double real(const double& r) {
+inline real_t real(const real_t& r) {
   /***
    *  So the real() statement can be used even with
    *  the double version of the code to be complexified.
@@ -25,20 +32,20 @@ inline double real(const double& r) {
 return r;
 }
 
-inline double imag(const double& r) {
+inline real_t imag(const real_t& r) {
   return 0.;
 }
 #endif // HDRderivify
 
 
-class cplx : public complex<double> {
+class cplx : public complex<real_t> {
 public:
-  cplx() : complex<double>() {};
-  cplx(const double& d) : complex<double>(d) {};
-  cplx(const double& r, const double& i) : complex<double>(r,i) {};
-  cplx(const complex<double>& z) : complex<double>(z) {};
-  cplx(const complex<float>& z) : complex<double>(z) {};
-  operator double() {return this->real();}
+  cplx() : complex<real_t>() {};
+  cplx(const real_t& d) : complex<real_t>(d) {};
+  cplx(const real_t& r, const real_t& i) : complex<real_t>(r,i) {};
+  cplx(const complex<double>& z) : complex<real_t>(z) {};
+  cplx(const complex<float>& z) : complex<real_t>(z) {};
+  operator real_t() {return this->real();}
   operator int() {return int(this->real());}
   // relational operators
   // Conversion constructor should be able to take care of the
@@ -46,23 +53,23 @@ public:
   // complains of ambiguous inheritance.  This should be more
   // efficient anyway.  (A hint of what comes below.)
   friend inline bool operator==(const cplx&,const cplx&);
-  friend inline bool operator==(const cplx&,const double&);
-  friend inline bool operator==(const double&,const cplx&);
+  friend inline bool operator==(const cplx&,const real_t&);
+  friend inline bool operator==(const real_t&,const cplx&);
   friend inline bool operator!=(const cplx&,const cplx&);
-  friend inline bool operator!=(const cplx&,const double&);
-  friend inline bool operator!=(const double&,const cplx&);
+  friend inline bool operator!=(const cplx&,const real_t&);
+  friend inline bool operator!=(const real_t&,const cplx&);
   friend inline bool operator>(const cplx&,const cplx&);
-  friend inline bool operator>(const cplx&,const double&);
-  friend inline bool operator>(const double&,const cplx&);
+  friend inline bool operator>(const cplx&,const real_t&);
+  friend inline bool operator>(const real_t&,const cplx&);
   friend inline bool operator<(const cplx&,const cplx&);
-  friend inline bool operator<(const cplx&,const double&);
-  friend inline bool operator<(const double&,const cplx&);
+  friend inline bool operator<(const cplx&,const real_t&);
+  friend inline bool operator<(const real_t&,const cplx&);
   friend inline bool operator>=(const cplx&,const cplx&);
-  friend inline bool operator>=(const cplx&,const double&);
-  friend inline bool operator>=(const double&,const cplx&);
+  friend inline bool operator>=(const cplx&,const real_t&);
+  friend inline bool operator>=(const real_t&,const cplx&);
   friend inline bool operator<=(const cplx&,const cplx&);
-  friend inline bool operator<=(const cplx&,const double&);
-  friend inline bool operator<=(const double&,const cplx&);
+  friend inline bool operator<=(const cplx&,const real_t&);
+  friend inline bool operator<=(const real_t&,const cplx&);
   // here's the annoying thing:
   // Every function in class complex<double> that returns a
   // complex<double> causes ambiguities with function overloading
@@ -73,25 +80,25 @@ public:
   // basic arithmetic
   inline cplx operator+() const;
   inline cplx operator+(const cplx&) const;
-  inline cplx operator+(const double&) const;
+  inline cplx operator+(const real_t&) const;
   inline cplx operator+(const int&) const;
-  inline friend cplx operator+(const double&, const cplx&);
+  inline friend cplx operator+(const real_t&, const cplx&);
   inline friend cplx operator+(const int&, const cplx&);
   inline cplx operator-() const;
   inline cplx operator-(const cplx&) const;
-  inline cplx operator-(const double&) const;
+  inline cplx operator-(const real_t&) const;
   inline cplx operator-(const int&) const;
-  inline friend cplx operator-(const double&, const cplx&);
+  inline friend cplx operator-(const real_t&, const cplx&);
   inline friend cplx operator-(const int&, const cplx&);
   inline cplx operator*(const cplx&) const;
-  inline cplx operator*(const double&) const;
+  inline cplx operator*(const real_t&) const;
   inline cplx operator*(const int&) const;
-  inline friend cplx operator*(const double&, const cplx&);
+  inline friend cplx operator*(const real_t&, const cplx&);
   inline friend cplx operator*(const int&, const cplx&);
   inline cplx operator/(const cplx&) const;
-  inline cplx operator/(const double&) const;
+  inline cplx operator/(const real_t&) const;
   inline cplx operator/(const int&) const;
-  inline friend cplx operator/(const double&, const cplx&);
+  inline friend cplx operator/(const real_t&, const cplx&);
   inline friend cplx operator/(const int&, const cplx&);
   // from <math.h>
   inline friend cplx sin(const cplx&);
@@ -105,9 +112,9 @@ public:
   inline friend cplx sqrt(const cplx&);
   inline friend cplx exp(const cplx&);
   inline friend cplx pow(const cplx&, const cplx&);
-  inline friend cplx pow(const cplx&, const double&);
+  inline friend cplx pow(const cplx&, const real_t&);
   inline friend cplx pow(const cplx&, const int&);
-  inline friend cplx pow(const double&, const cplx&);
+  inline friend cplx pow(const real_t&, const cplx&);
   inline friend cplx pow(const int&, const cplx&);
   // complex versions of these are not in standard library
   // or they need to be redefined:
@@ -127,12 +134,12 @@ inline bool operator==(const cplx& lhs, const cplx& rhs)
   return real(lhs) == real(rhs);
 }
 
-inline bool operator==(const cplx& lhs, const double& rhs)
+inline bool operator==(const cplx& lhs, const real_t& rhs)
 {
   return real(lhs) == rhs;
 }
 
-inline bool operator==(const double& lhs, const cplx& rhs)
+inline bool operator==(const real_t& lhs, const cplx& rhs)
 {
   return lhs == real(rhs);
 }
@@ -142,12 +149,12 @@ inline bool operator!=(const cplx& lhs, const cplx& rhs)
   return real(lhs) != real(rhs);
 }
 
-inline bool operator!=(const cplx& lhs, const double& rhs)
+inline bool operator!=(const cplx& lhs, const real_t& rhs)
 {
   return real(lhs) != rhs;
 }
 
-inline bool operator!=(const double& lhs, const cplx& rhs)
+inline bool operator!=(const real_t& lhs, const cplx& rhs)
 {
   return lhs != real(rhs);
 }
@@ -157,12 +164,12 @@ inline bool operator>(const cplx& lhs, const cplx& rhs)
   return real(lhs) > real(rhs);
 }
 
-inline bool operator>(const cplx& lhs, const double& rhs)
+inline bool operator>(const cplx& lhs, const real_t& rhs)
 {
   return real(lhs) > rhs;
 }
 
-inline bool operator>(const double& lhs, const cplx& rhs)
+inline bool operator>(const real_t& lhs, const cplx& rhs)
 {
   return lhs > real(rhs);
 }
@@ -172,12 +179,12 @@ inline bool operator<(const cplx& lhs, const cplx& rhs)
   return real(lhs) < real(rhs);
 }
 
-inline bool operator<(const cplx& lhs, const double& rhs)
+inline bool operator<(const cplx& lhs, const real_t& rhs)
 {
   return real(lhs) < rhs;
 }
 
-inline bool operator<(const double& lhs, const cplx& rhs)
+inline bool operator<(const real_t& lhs, const cplx& rhs)
 {
   return lhs < real(rhs);
 }
@@ -187,12 +194,12 @@ inline bool operator>=(const cplx& lhs, const cplx& rhs)
   return real(lhs) >= real(rhs);
 }
 
-inline bool operator>=(const cplx& lhs, const double& rhs)
+inline bool operator>=(const cplx& lhs, const real_t& rhs)
 {
   return real(lhs) >= rhs;
 }
 
-inline bool operator>=(const double& lhs, const cplx& rhs)
+inline bool operator>=(const real_t& lhs, const cplx& rhs)
 {
   return lhs >= real(rhs);
 }
@@ -202,216 +209,216 @@ inline bool operator<=(const cplx& lhs, const cplx& rhs)
   return real(lhs) <= real(rhs);
 }
 
-inline bool operator<=(const cplx& lhs, const double& rhs)
+inline bool operator<=(const cplx& lhs, const real_t& rhs)
 {
   return real(lhs) <= rhs;
 }
 
-inline bool operator<=(const double& lhs, const cplx& rhs)
+inline bool operator<=(const real_t& lhs, const cplx& rhs)
 {
   return lhs <= real(rhs);
 }
 
 inline cplx cplx::operator+() const
 {
-  return +complex<double>(*this);
+  return +complex<real_t>(*this);
 }
 
 inline cplx cplx::operator+(const cplx& z) const
 {
-  return complex<double>(*this)+complex<double>(z);
+  return complex<real_t>(*this)+complex<real_t>(z);
 }
 
-inline cplx cplx::operator+(const double& r) const
+inline cplx cplx::operator+(const real_t& r) const
 {
-  return complex<double>(*this)+r;
+  return complex<real_t>(*this)+r;
 }
 
 inline cplx cplx::operator+(const int& i) const
 {
-  return complex<double>(*this)+double(i);
+  return complex<real_t>(*this)+real_t(i);
 }
 
-inline cplx operator+(const double& r, const cplx& z)
+inline cplx operator+(const real_t& r, const cplx& z)
 {
-  return r+complex<double>(z);
+  return r+complex<real_t>(z);
 }
 
 inline cplx operator+(const int& i, const cplx& z)
 {
-  return double(i)+complex<double>(z);
+  return real_t(i)+complex<real_t>(z);
 }
 
 inline cplx cplx::operator-() const
 {
-  return -complex<double>(*this);
+  return -complex<real_t>(*this);
 }
 
 inline cplx cplx::operator-(const cplx& z) const
 {
-  return complex<double>(*this)-complex<double>(z);
+  return complex<real_t>(*this)-complex<real_t>(z);
 }
 
-inline cplx cplx::operator-(const double& r) const
+inline cplx cplx::operator-(const real_t& r) const
 {
-  return complex<double>(*this)-r;
+  return complex<real_t>(*this)-r;
 }
 
 inline cplx cplx::operator-(const int& i) const
 {
-  return complex<double>(*this)-double(i);
+  return complex<real_t>(*this)-real_t(i);
 }
 
-inline cplx operator-(const double& r, const cplx& z)
+inline cplx operator-(const real_t& r, const cplx& z)
 {
-  return r-complex<double>(z);
+  return r-complex<real_t>(z);
 }
 
 inline cplx operator-(const int& i, const cplx& z)
 {
-  return double(i)-complex<double>(z);
+  return real_t(i)-complex<real_t>(z);
 }
 
 inline cplx cplx::operator*(const cplx& z) const
 {
-  return complex<double>(*this)*complex<double>(z);
+  return complex<real_t>(*this)*complex<real_t>(z);
 }
 
-inline cplx cplx::operator*(const double& r) const
+inline cplx cplx::operator*(const real_t& r) const
 {
-  return complex<double>(*this)*r;
+  return complex<real_t>(*this)*r;
 }
 
 inline cplx cplx::operator*(const int& i) const
 {
-  return complex<double>(*this)*double(i);
+  return complex<real_t>(*this)*real_t(i);
 }
 
-inline cplx operator*(const double& r, const cplx& z)
+inline cplx operator*(const real_t& r, const cplx& z)
 {
-  return r*complex<double>(z);
+  return r*complex<real_t>(z);
 }
 
 inline cplx operator*(const int& i, const cplx& z)
 {
-  return double(i)*complex<double>(z);
+  return real_t(i)*complex<real_t>(z);
 }
 
 inline cplx cplx::operator/(const cplx& z) const
 {
-  return complex<double>(*this)/complex<double>(z);
+  return complex<real_t>(*this)/complex<real_t>(z);
 }
 
-inline cplx cplx::operator/(const double& r) const
+inline cplx cplx::operator/(const real_t& r) const
 {
-  return complex<double>(*this)/r;
+  return complex<real_t>(*this)/r;
 }
 
 inline cplx cplx::operator/(const int& i) const
 {
-  return complex<double>(*this)/double(i);
+  return complex<real_t>(*this)/real_t(i);
 }
 
-inline cplx operator/(const double& r, const cplx& z)
+inline cplx operator/(const real_t& r, const cplx& z)
 {
-  return r/complex<double>(z);
+  return r/complex<real_t>(z);
 }
 
 inline cplx operator/(const int& i, const cplx& z)
 {
-  return double(i)/complex<double>(z);
+  return real_t(i)/complex<real_t>(z);
 }
 
 inline cplx sin(const cplx& z)
 {
-  return sin(complex<double>(z));
+  return sin(complex<real_t>(z));
 }
 
 inline cplx sinh(const cplx& z)
 {
-  return sinh(complex<double>(z));
+  return sinh(complex<real_t>(z));
 }
 
 inline cplx cos(const cplx& z)
 {
-  return cos(complex<double>(z));
+  return cos(complex<real_t>(z));
 }
 
 inline cplx cosh(const cplx& z)
 {
-  return cosh(complex<double>(z));
+  return cosh(complex<real_t>(z));
 }
 
 #ifdef __GNUC__ // bug in gcc ?? get segv w/egcs-2.91.66 and 2.95.2
 inline cplx tan(const cplx& z)
 {
-  return sin(complex<double>(z))/cos(complex<double>(z));
+  return sin(complex<real_t>(z))/cos(complex<real_t>(z));
 }
 
 inline cplx tanh(const cplx& z)
 {
-  return sinh(complex<double>(z))/cosh(complex<double>(z));
+  return sinh(complex<real_t>(z))/cosh(complex<real_t>(z));
 }
 
 inline cplx log10(const cplx& z)
 {
-  return log(complex<double>(z))/log(10.);
+  return log(complex<real_t>(z))/log(real_t(10.));
 }
 #else
 inline cplx tan(const cplx& z)
 {
-  return tan(complex<double>(z));
+  return tan(complex<real_t>(z));
 }
 
 inline cplx tanh(const cplx& z)
 {
-  return tanh(complex<double>(z));
+  return tanh(complex<real_t>(z));
 }
 
 inline cplx log10(const cplx& z)
 {
-  return log10(complex<double>(z));
+  return log10(complex<real_t>(z));
 }
 #endif
 
 inline cplx log(const cplx& z)
 {
-  return log(complex<double>(z));
+  return log(complex<real_t>(z));
 }
 
 inline cplx sqrt(const cplx& z)
 {
-  return sqrt(complex<double>(z));
+  return sqrt(complex<real_t>(z));
 }
 
 inline cplx exp(const cplx& z)
 {
-  return exp(complex<double>(z));
+  return exp(complex<real_t>(z));
 }
 
 inline cplx pow(const cplx& a, const cplx& b)
 {
-  return pow(complex<double>(a),complex<double>(b));
+  return pow(complex<real_t>(a),complex<real_t>(b));
 }
 
-inline cplx pow(const cplx& a, const double& b)
+inline cplx pow(const cplx& a, const real_t& b)
 {
-  return pow(complex<double>(a),b);
+  return pow(complex<real_t>(a),b);
 }
 
 inline cplx pow(const cplx& a, const int& b)
 {
-  return pow(complex<double>(a),double(b));
+  return pow(complex<real_t>(a),real_t(b));
 }
 
-inline cplx pow(const double& a, const cplx& b)
+inline cplx pow(const real_t& a, const cplx& b)
 {
-  return pow(a,complex<double>(b));
+  return pow(a,complex<real_t>(b));
 }
 
 inline cplx pow(const int& a, const cplx& b)
 {
-  return pow(double(a),complex<double>(b));
+  return pow(real_t(a),complex<real_t>(b));
 }
 
 inline cplx fabs(const cplx& z)

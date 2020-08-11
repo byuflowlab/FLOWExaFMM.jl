@@ -13,9 +13,9 @@ namespace exafmm {
     timer[event] = t;
   }
 
-  double stop(std::string event) {
+  real_t stop(std::string event) {
     gettimeofday(&t, NULL);
-    double eventTime = t.tv_sec - timer[event].tv_sec +
+    real_t eventTime = t.tv_sec - timer[event].tv_sec +
       (t.tv_usec - timer[event].tv_usec) * 1e-6;
     print(event, eventTime);
     return eventTime;

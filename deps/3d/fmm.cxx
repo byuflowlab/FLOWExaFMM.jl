@@ -19,6 +19,7 @@
 
 
  // ExaFMM modules
+#include "exafmm.h"
 #include "args.h"
 #include "build_tree.h"
 #include "dataset.h"
