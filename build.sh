@@ -13,6 +13,7 @@ cp -r $SRC_DIR/* $COMPILE_DIR/
 
 echo "Configuring build"
 cd $COMPILE_DIR/
+# ./configure --enable-single
 ./configure
 
 echo "Compiling 3d"
