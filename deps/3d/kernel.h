@@ -834,7 +834,9 @@ namespace exafmm {
 
       }
 
-      Bi[i].p += p;
+      Bi[i].J[0] += p[0];
+      Bi[i].J[1] += p[1];
+      Bi[i].J[2] += p[2];
     }
   }
 
@@ -857,7 +859,9 @@ namespace exafmm {
 
       }
 
-      Bi[i].p += p;
+      Bi[i].J[0] += p[0];
+      Bi[i].J[1] += p[1];
+      Bi[i].J[2] += p[2];
     }
   }
 
