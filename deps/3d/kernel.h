@@ -826,11 +826,11 @@ namespace exafmm {
       for (int j=0; j<Cj->numBodies; j++) {
         real_t R2 = norm(Bi[i].X - Bj[j].X);
 
-        if (R2 != 0) {
+        // if (R2 != 0) {
           real_t S2 = 2 * Bj[j].sigma[0] * Bj[j].sigma[0];
           real_t aux1 = std::exp(-R2 / S2) / (M_PI * S2) / sqrt(M_PI * S2);
             p += Bj[j].q * aux1;
-        }
+        // }
 
       }
 
@@ -851,11 +851,11 @@ namespace exafmm {
       for (int j=0; j<Cj->numBodies; j++) {
         real_t R2 = norm(Bi[i].X - Bj[j].X);
 
-        if (R2 != 0) {
+        // if (R2 != 0) {
           real_t aux1 = R2 / (Bj[j].sigma[0]*Bj[j].sigma[0]);
           real_t aux2 = 7.5 / std::pow(aux1 + 1, 3.5) / (Bj[j].sigma[0]*Bj[j].sigma[0]*Bj[j].sigma[0]);
           p += Bj[j].q * aux2 / (M_PI*4);
-        }
+        // }
 
       }
 
