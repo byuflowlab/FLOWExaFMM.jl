@@ -19,9 +19,8 @@ export JlCxx_DIR=/Users/randerson/.julia/artifacts/6017255205dc4fbf4d962903a855a
 =#
 
 # find package directory
-println("joinpath(@__DIR__, '..') = ",joinpath(@__DIR__, ".."))
+println("joinpath(@__DIR__, '..') = ",normpath(joinpath(@__DIR__, "..")))
 packagedir = normpath(joinpath(@__DIR__, ".."))
-
 if Sys.isapple()
 	# check for environment variables
 	if isdir("/usr/local/Cellar/llvm/")
@@ -52,6 +51,8 @@ if Sys.isapple()
     build_cutoff_i = findfirst(isequal('@'), buildcontents)
     buildcontents = buildcontents[build_cutoff_i+1:end]
     open(joinpath(packagedir, "build.sh"), "w") do io
+        write(io, "# set package directory\n")
+        write(io, "export THIS_DIRECTORY=$(packagedir)\n\n")
         write(io, "# set environment variables to use LLVM compilers and libraries\n")
         write(io, "export CMAKE_C_COMPILER_JLENV=$(CMAKE_C_COMPILER_JLENV)\n")
         write(io, "export CMAKE_CXX_COMPILER_JLENV=$(CMAKE_CXX_COMPILER_JLENV)\n")
@@ -68,6 +69,8 @@ if Sys.isapple()
     make_cutoff_i = findfirst(isequal('@'), makecontents)
     makecontents = makecontents[make_cutoff_i+1:end]
     open(joinpath(packagedir, "make.sh"), "w") do io
+        write(io, "# set package directory\n")
+        write(io, "export THIS_DIRECTORY=$(packagedir)\n\n")
         write(io, "# set environment variables to use LLVM compilers and libraries\n")
         write(io, "export CMAKE_C_COMPILER_JLENV=$(CMAKE_C_COMPILER_JLENV)\n")
         write(io, "export CMAKE_CXX_COMPILER_JLENV=$(CMAKE_CXX_COMPILER_JLENV)\n")
@@ -103,5 +106,5 @@ end
 buildcommand = joinpath(packagedir, "build.sh")
 makecommand = joinpath(packagedir, "make.sh")
 # run(`sh -c $buildcommand`)
-# run(`sh -c $makecommand`)
+run(`sh -c $makecommand`)
 println("Finished building FLOWExaFMM")

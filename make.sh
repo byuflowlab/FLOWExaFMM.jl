@@ -1,18 +1,9 @@
-# set environment variables to use LLVM compilers and libraries
-export CMAKE_C_COMPILER_JLENV=/usr/local/Cellar/llvm/10.0.1/bin/clang
-export CMAKE_CXX_COMPILER_JLENV=/usr/local/Cellar/llvm/10.0.1/bin/clang++
-export OPENMP_LIBRARIES_JLENV=/usr/local/Cellar/llvm/10.0.1/lib
-export OPENMP_INCLUDES_JLENV=/usr/local/Cellar/llvm/10.0.1/include
-
-# set environment variables for use with CxxWrap
-export JlCxx_DIR=/Users/randerson/.julia/artifacts/6017255205dc4fbf4d962903a855a0c631f092dc
-
 # @
 
-THIS_DIR=$(pwd)
-SRC_DIR=deps
-COMPILE_DIR=build
-SAVE_DIR=src
+# THIS_DIRECTORY=$(pwd)
+SRC_DIR="$THIS_DIRECTORY/deps"
+COMPILE_DIR="$THIS_DIRECTORY/build"
+SAVE_DIR="$THIS_DIRECTORY/src"
 
 echo "Removing existing build"
 rm -rf $COMPILE_DIR
