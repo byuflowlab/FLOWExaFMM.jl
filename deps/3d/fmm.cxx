@@ -160,7 +160,7 @@ bool getPrecision(){
 
 void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t phi,
                 bool verbose, int p2p_type, int l2p_type,
-                bool rbf, bool sgs, bool transposed, bool reset,
+                bool rbf, bool sgs, bool transposed, bool reset, bool reset_sgs,
                 bool sort=true){
 
     // Dummy argument values
@@ -219,6 +219,10 @@ void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t p
     if(reset){
       if(verbose) std::cout << "Initializing particles\n";
       initTarget(bodies, np);
+    }
+    if(reset_sgs){
+      if(verbose) std::cout << "Initializing particles SGS\n";
+      initTarget2(bodies, np);
     }
 
     // Build the tree

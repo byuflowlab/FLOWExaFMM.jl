@@ -158,6 +158,13 @@ namespace exafmm {
     }
   }
 
+  //! Initialize target values
+  void initTarget2(Bodies & bodies, int nb) {
+    for (int i=0; i<nb; ++i) {
+      bodies[i].J = 0;
+    }
+  }
+
   // //! Initialize dsitribution, source & target value of bodies
   // Bodies initBodies(int numBodies, const char * distribution,
   //                   int mpirank=0, int mpisize=1, int numSplit=1) {
