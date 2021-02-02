@@ -147,5 +147,7 @@ namespace exafmm {
   real_t SQRT4pi = sqrt(1/M_PI_4);
   real_t LAMBDA = 1.5;                          //! Target core overlap when fixing Lagrangian distortion
   bool RBF = false;                             //! Flag for running RBF routine
+  bool SGS = false;                             //! Flag for running SGS routine
+  bool TRANSPOSED = true;                       //! Flag for using transposed SGS scheme
 }
 #endif

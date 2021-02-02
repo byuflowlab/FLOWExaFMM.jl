@@ -866,6 +866,146 @@ namespace exafmm {
   }
 
 
+  // Vortex strethcing subgrid-scale model on Winckelman's algebraic kernel (See notebook 20210201)
+  void SGS_stretch_P2P_alg(Cell * Ci, Cell * Cj) {
+    // Body * Bi = Ci->body;
+    // Body * Bj = Cj->body;
+    //
+    // vec3 S = 0;   // Store stretching here
+    // real_t aux1 = 1/(4*M_PI);
+    //
+    // // Iterate over p particle
+    // for (int i=0; i<Ci->numBodies; i++) {
+    //   vec3 SGS = 0;
+    //
+    //   // Influence of q particle on p  (or j on i)
+    //   for (int j=0; j<Cj->numBodies; j++) {
+    //     real_t R2 = norm(Bi[i].X - Bj[j].X);
+    //
+    //     // if (R2 != 0) {
+    //     real_t aux2 = R2 / (Bj[j].sigma[0]*Bj[j].sigma[0]);
+    //     real_t zeta = 7.5 / std::pow(aux2 + 1, 3.5) / (Bj[j].sigma[0]*Bj[j].sigma[0]*Bj[j].sigma[0]) / (M_PI*4);
+    //
+    //     // Calculate stretching between p and q as S = (Gamma_q dot nabla) (u_p - x_q) )
+    //     // NOTE: this is negative since U is flipped in the VPM
+    //     if (TRANSPOSED){         // S = (Gamma_q dot nabla') (u_p - x_q) )
+    //       // x-component
+    //       S[0] = -Bj[j].q[0]*( (Bi[i].dJdx1[2*3 + 1]-Bi[i].dJdx1[1*3 + 2]) - (Bj[j].dJdx1[2*3 + 1]-Bj[j].dJdx1[1*3 + 2]) );
+    //       S[0] -= Bj[j].q[1]*( (Bi[i].dJdx1[0*3 + 2]-Bi[i].dJdx1[2*3 + 0]) - (Bj[j].dJdx1[0*3 + 2]-Bj[j].dJdx1[2*3 + 0]) );
+    //       S[0] -= Bj[j].q[2]*( (Bi[i].dJdx1[1*3 + 0]-Bi[i].dJdx1[0*3 + 1]) - (Bj[j].dJdx1[1*3 + 0]-Bj[j].dJdx1[0*3 + 1]) );
+    //       // y-component
+    //       S[1] = -Bj[j].q[0]*( (Bi[i].dJdx2[2*3 + 1]-Bi[i].dJdx2[1*3 + 2]) - (Bj[j].dJdx2[2*3 + 1]-Bj[j].dJdx2[1*3 + 2]) );
+    //       S[1] -= Bj[j].q[1]*( (Bi[i].dJdx2[0*3 + 2]-Bi[i].dJdx2[2*3 + 0]) - (Bj[j].dJdx2[0*3 + 2]-Bj[j].dJdx2[2*3 + 0]) );
+    //       S[1] -= Bj[j].q[2]*( (Bi[i].dJdx2[1*3 + 0]-Bi[i].dJdx2[0*3 + 1]) - (Bj[j].dJdx2[1*3 + 0]-Bj[j].dJdx2[0*3 + 1]) );
+    //       // z-component
+    //       S[2] = -Bj[j].q[0]*( (Bi[i].dJdx3[2*3 + 1]-Bi[i].dJdx3[1*3 + 2]) - (Bj[j].dJdx3[2*3 + 1]-Bj[j].dJdx3[1*3 + 2]) );
+    //       S[2] -= Bj[j].q[1]*( (Bi[i].dJdx3[0*3 + 2]-Bi[i].dJdx3[2*3 + 0]) - (Bj[j].dJdx3[0*3 + 2]-Bj[j].dJdx3[2*3 + 0]) );
+    //       S[2] -= Bj[j].q[2]*( (Bi[i].dJdx3[1*3 + 0]-Bi[i].dJdx3[0*3 + 1]) - (Bj[j].dJdx3[1*3 + 0]-Bj[j].dJdx3[0*3 + 1]) );
+    //     }
+    //     else{                   // S = (Gamma_q dot nabla) (u_p - x_q) )
+    //       // x-component
+    //       S[0] = -Bj[j].q[0]*( (Bi[i].dJdx1[2*3 + 1]-Bi[i].dJdx1[1*3 + 2]) - (Bj[j].dJdx1[2*3 + 1]-Bj[j].dJdx1[1*3 + 2]) );
+    //       S[0] -= Bj[j].q[1]*( (Bi[i].dJdx2[2*3 + 1]-Bi[i].dJdx2[1*3 + 2]) - (Bj[j].dJdx2[2*3 + 1]-Bj[j].dJdx2[1*3 + 2]) );
+    //       S[0] -= Bj[j].q[2]*( (Bi[i].dJdx3[2*3 + 1]-Bi[i].dJdx3[1*3 + 2]) - (Bj[j].dJdx3[2*3 + 1]-Bj[j].dJdx3[1*3 + 2]) );
+    //       // y-component
+    //       S[1] = -Bj[j].q[0]*( (Bi[i].dJdx1[0*3 + 2]-Bi[i].dJdx1[2*3 + 0]) - (Bj[j].dJdx1[0*3 + 2]-Bj[j].dJdx1[2*3 + 0]) );
+    //       S[1] -= Bj[j].q[1]*( (Bi[i].dJdx2[0*3 + 2]-Bi[i].dJdx2[2*3 + 0]) - (Bj[j].dJdx2[0*3 + 2]-Bj[j].dJdx2[2*3 + 0]) );
+    //       S[1] -= Bj[j].q[2]*( (Bi[i].dJdx3[0*3 + 2]-Bi[i].dJdx3[2*3 + 0]) - (Bj[j].dJdx3[0*3 + 2]-Bj[j].dJdx3[2*3 + 0]) );
+    //       // z-component
+    //       S[2] = -Bj[j].q[0]*( (Bi[i].dJdx1[1*3 + 0]-Bi[i].dJdx1[0*3 + 1]) - (Bj[j].dJdx1[1*3 + 0]-Bj[j].dJdx1[0*3 + 1]) );
+    //       S[2] -= Bj[j].q[1]*( (Bi[i].dJdx2[1*3 + 0]-Bi[i].dJdx2[0*3 + 1]) - (Bj[j].dJdx2[1*3 + 0]-Bj[j].dJdx2[0*3 + 1]) );
+    //       S[2] -= Bj[j].q[2]*( (Bi[i].dJdx3[1*3 + 0]-Bi[i].dJdx3[0*3 + 1]) - (Bj[j].dJdx3[1*3 + 0]-Bj[j].dJdx3[0*3 + 1]) );
+    //     }
+    //
+    //     // Backscatter filter criterion f_pq
+    //     if (Bi[i].q[0]*S[0] + Bi[i].q[1]*S[1] + Bi[i].q[2]*S[2] >= 0) {
+    //       // Accumulate zeta * S
+    //       // (Divide S by 4*pi to obtain velocity derivatives)
+    //       SGS[0] += aux1*zeta*S[0];
+    //       SGS[1] += aux1*zeta*S[1];
+    //       SGS[2] += aux1*zeta*S[2];
+    //     }
+    //     // }
+    //
+    //   }
+    //
+    //   // Save it where FLOWVPM will find it
+    //   Bi[i].J[0] -= SGS[0];
+    //   Bi[i].J[1] -= SGS[1];
+    //   Bi[i].J[2] -= SGS[2];
+    // }
+  }
+
+  // Vortex strethcing subgrid-scale model on Gaussian-Erf kernel (See notebook 20210201)
+  void SGS_stretch_P2P_Gaussian(Cell * Ci, Cell * Cj) {
+    // Body * Bi = Ci->body;
+    // Body * Bj = Cj->body;
+    //
+    // vec3 S = 0;   // Store stretching here
+    // real_t aux1 = 1/(4*M_PI);
+    //
+    // // Iterate over p particle
+    // for (int i=0; i<Ci->numBodies; i++) {
+    //   vec3 SGS = 0;
+    //
+    //   // Influence of q particle on p  (or j on i)
+    //   for (int j=0; j<Cj->numBodies; j++) {
+    //     real_t R2 = norm(Bi[i].X - Bj[j].X);
+    //
+    //     // if (R2 != 0) {
+    //     real_t S2 = 2 * Bj[j].sigma[0] * Bj[j].sigma[0];
+    //     real_t zeta = std::exp(-R2 / S2) / (M_PI * S2) / sqrt(M_PI * S2);
+    //
+    //     // Calculate stretching between p and q as S = (Gamma_q dot nabla) (u_p - x_q) )
+    //     // NOTE: this is negative since U is flipped in the VPM
+    //     if (TRANSPOSED){         // S = (Gamma_q dot nabla') (u_p - x_q) )
+    //       // x-component
+    //       S[0] = -Bj[j].q[0]*( (Bi[i].dJdx1[2*3 + 1]-Bi[i].dJdx1[1*3 + 2]) - (Bj[j].dJdx1[2*3 + 1]-Bj[j].dJdx1[1*3 + 2]) );
+    //       S[0] -= Bj[j].q[1]*( (Bi[i].dJdx1[0*3 + 2]-Bi[i].dJdx1[2*3 + 0]) - (Bj[j].dJdx1[0*3 + 2]-Bj[j].dJdx1[2*3 + 0]) );
+    //       S[0] -= Bj[j].q[2]*( (Bi[i].dJdx1[1*3 + 0]-Bi[i].dJdx1[0*3 + 1]) - (Bj[j].dJdx1[1*3 + 0]-Bj[j].dJdx1[0*3 + 1]) );
+    //       // y-component
+    //       S[1] = -Bj[j].q[0]*( (Bi[i].dJdx2[2*3 + 1]-Bi[i].dJdx2[1*3 + 2]) - (Bj[j].dJdx2[2*3 + 1]-Bj[j].dJdx2[1*3 + 2]) );
+    //       S[1] -= Bj[j].q[1]*( (Bi[i].dJdx2[0*3 + 2]-Bi[i].dJdx2[2*3 + 0]) - (Bj[j].dJdx2[0*3 + 2]-Bj[j].dJdx2[2*3 + 0]) );
+    //       S[1] -= Bj[j].q[2]*( (Bi[i].dJdx2[1*3 + 0]-Bi[i].dJdx2[0*3 + 1]) - (Bj[j].dJdx2[1*3 + 0]-Bj[j].dJdx2[0*3 + 1]) );
+    //       // z-component
+    //       S[2] = -Bj[j].q[0]*( (Bi[i].dJdx3[2*3 + 1]-Bi[i].dJdx3[1*3 + 2]) - (Bj[j].dJdx3[2*3 + 1]-Bj[j].dJdx3[1*3 + 2]) );
+    //       S[2] -= Bj[j].q[1]*( (Bi[i].dJdx3[0*3 + 2]-Bi[i].dJdx3[2*3 + 0]) - (Bj[j].dJdx3[0*3 + 2]-Bj[j].dJdx3[2*3 + 0]) );
+    //       S[2] -= Bj[j].q[2]*( (Bi[i].dJdx3[1*3 + 0]-Bi[i].dJdx3[0*3 + 1]) - (Bj[j].dJdx3[1*3 + 0]-Bj[j].dJdx3[0*3 + 1]) );
+    //     }
+    //     else{                   // S = (Gamma_q dot nabla) (u_p - x_q) )
+    //       // x-component
+    //       S[0] = -Bj[j].q[0]*( (Bi[i].dJdx1[2*3 + 1]-Bi[i].dJdx1[1*3 + 2]) - (Bj[j].dJdx1[2*3 + 1]-Bj[j].dJdx1[1*3 + 2]) );
+    //       S[0] -= Bj[j].q[1]*( (Bi[i].dJdx2[2*3 + 1]-Bi[i].dJdx2[1*3 + 2]) - (Bj[j].dJdx2[2*3 + 1]-Bj[j].dJdx2[1*3 + 2]) );
+    //       S[0] -= Bj[j].q[2]*( (Bi[i].dJdx3[2*3 + 1]-Bi[i].dJdx3[1*3 + 2]) - (Bj[j].dJdx3[2*3 + 1]-Bj[j].dJdx3[1*3 + 2]) );
+    //       // y-component
+    //       S[1] = -Bj[j].q[0]*( (Bi[i].dJdx1[0*3 + 2]-Bi[i].dJdx1[2*3 + 0]) - (Bj[j].dJdx1[0*3 + 2]-Bj[j].dJdx1[2*3 + 0]) );
+    //       S[1] -= Bj[j].q[1]*( (Bi[i].dJdx2[0*3 + 2]-Bi[i].dJdx2[2*3 + 0]) - (Bj[j].dJdx2[0*3 + 2]-Bj[j].dJdx2[2*3 + 0]) );
+    //       S[1] -= Bj[j].q[2]*( (Bi[i].dJdx3[0*3 + 2]-Bi[i].dJdx3[2*3 + 0]) - (Bj[j].dJdx3[0*3 + 2]-Bj[j].dJdx3[2*3 + 0]) );
+    //       // z-component
+    //       S[2] = -Bj[j].q[0]*( (Bi[i].dJdx1[1*3 + 0]-Bi[i].dJdx1[0*3 + 1]) - (Bj[j].dJdx1[1*3 + 0]-Bj[j].dJdx1[0*3 + 1]) );
+    //       S[2] -= Bj[j].q[1]*( (Bi[i].dJdx2[1*3 + 0]-Bi[i].dJdx2[0*3 + 1]) - (Bj[j].dJdx2[1*3 + 0]-Bj[j].dJdx2[0*3 + 1]) );
+    //       S[2] -= Bj[j].q[2]*( (Bi[i].dJdx3[1*3 + 0]-Bi[i].dJdx3[0*3 + 1]) - (Bj[j].dJdx3[1*3 + 0]-Bj[j].dJdx3[0*3 + 1]) );
+    //     }
+    //
+    //     // Backscatter filter criterion f_pq
+    //     if (Bi[i].q[0]*S[0] + Bi[i].q[1]*S[1] + Bi[i].q[2]*S[2] >= 0) {
+    //       // Accumulate zeta * S
+    //       // (Divide S by 4*pi to obtain velocity derivatives)
+    //       SGS[0] += aux1*zeta*S[0];
+    //       SGS[1] += aux1*zeta*S[1];
+    //       SGS[2] += aux1*zeta*S[2];
+    //     }
+    //     // }
+    //
+    //   }
+    //
+    //   // Save it where FLOWVPM will find it
+    //   Bi[i].J[0] -= SGS[0];
+    //   Bi[i].J[1] -= SGS[1];
+    //   Bi[i].J[2] -= SGS[2];
+    // }
+  }
+
   void P2P_a(Cell * Ci, Cell * Cj){
     switch(P2P_TYPE){
       case 0: P2P_sing(Ci, Cj); break;
@@ -893,14 +1033,25 @@ namespace exafmm {
     }
   }
 
+  void sgs_stretch_P2P(Cell * Ci, Cell * Cj){
+    switch(P2P_TYPE){
+      case 3: SGS_stretch_P2P_alg(Ci, Cj); break;
+      case 5: SGS_stretch_P2P_Gaussian(Ci, Cj); break;
+      default: std::cout << "Exception 125: Invalid P2P_TYPE "<<P2P_TYPE<<"\n"; throw 123;
+    }
+  }
 
-  void P2P(Cell * Ci, Cell * Cj){ if(RBF){ zetaP2P(Ci, Cj); }
-                                  else{ P2P_a(Ci, Cj); } }
-  void L2P(Cell * Ci){ if(RBF==false) L2P_a(Ci); }
-  void P2M(Cell * C){ if(RBF==false) P2M_a(C); }
-  void M2M(Cell * Ci){ if(RBF==false) M2M_a(Ci); }
-  void M2L(Cell * Ci, Cell * Cj){ if(RBF==false) M2L_a(Ci, Cj); }
-  void L2L(Cell * Cj){ if(RBF==false) L2L_a(Cj); }
+
+  void P2P(Cell * Ci, Cell * Cj){
+    if(RBF){ zetaP2P(Ci, Cj); }
+    else if(SGS){ sgs_stretch_P2P(Ci, Cj); }
+    else{ P2P_a(Ci, Cj); }
+  }
+  void L2P(Cell * Ci){ if(RBF==false && SGS==false) L2P_a(Ci); }
+  void P2M(Cell * C){ if(RBF==false && SGS==false) P2M_a(C); }
+  void M2M(Cell * Ci){ if(RBF==false && SGS==false) M2M_a(Ci); }
+  void M2L(Cell * Ci, Cell * Cj){ if(RBF==false && SGS==false) M2L_a(Ci, Cj); }
+  void L2L(Cell * Cj){ if(RBF==false && SGS==false) L2L_a(Cj); }
 
 
 }
