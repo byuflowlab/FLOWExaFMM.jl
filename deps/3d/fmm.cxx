@@ -23,6 +23,7 @@
 #include "args.h"
 #include "build_tree.h"
 #include "dataset.h"
+#include "sgs.h"
 #include "kernel.h"
 #include "timer.h"
 #if EXAFMM_EAGER
@@ -159,7 +160,7 @@ bool getPrecision(){
 }
 
 void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t phi,
-                bool verbose, int p2p_type, int l2p_type,
+                bool verbose, int p2p_type, int l2p_type, int sgs_type,
                 bool rbf, bool sgs, bool transposed, bool reset, bool reset_sgs,
                 bool sort=true){
 
@@ -179,6 +180,7 @@ void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t p
     VERBOSE = verbose;
     P2P_TYPE = p2p_type;
     L2P_TYPE = l2p_type;
+    SGS_TYPE = sgs_type;
     RBF = rbf;
     SGS = sgs;
     TRANSPOSED = transposed;

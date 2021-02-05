@@ -78,10 +78,12 @@ namespace exafmm {
           buffer[i].vol = bodies[i].vol;
           buffer[i].index = bodies[i].index;
           // buffer[i].p = bodies[i].p;
-          // buffer[i].J = bodies[i].J;
-          // buffer[i].dJdx1 = bodies[i].dJdx1;
-          // buffer[i].dJdx2 = bodies[i].dJdx2;
-          // buffer[i].dJdx3 = bodies[i].dJdx3;
+          if(SGS){
+            buffer[i].J = bodies[i].J;
+            buffer[i].dJdx1 = bodies[i].dJdx1;
+            buffer[i].dJdx2 = bodies[i].dJdx2;
+            buffer[i].dJdx3 = bodies[i].dJdx3;
+          }
           // buffer[i].pse = bodies[i].pse;
         }
       }
@@ -115,10 +117,12 @@ namespace exafmm {
       buffer[counter[octant]].index = bodies[i].index;
       buffer[counter[octant]].vol = bodies[i].vol;
       // buffer[counter[octant]].p = bodies[i].p;
-      // buffer[counter[octant]].J = bodies[i].J;
-      // buffer[counter[octant]].dJdx1 = bodies[i].dJdx1;
-      // buffer[counter[octant]].dJdx2 = bodies[i].dJdx2;
-      // buffer[counter[octant]].dJdx3 = bodies[i].dJdx3;
+      if(SGS){
+        buffer[counter[octant]].J = bodies[i].J;
+        buffer[counter[octant]].dJdx1 = bodies[i].dJdx1;
+        buffer[counter[octant]].dJdx2 = bodies[i].dJdx2;
+        buffer[counter[octant]].dJdx3 = bodies[i].dJdx3;
+      }
       // buffer[counter[octant]].pse = bodies[i].pse;
       counter[octant]++;
     }
