@@ -892,10 +892,31 @@ namespace exafmm {
     }
   }
 
+  void sgs_stretch0_P2P(Cell * Ci, Cell * Cj){
+    switch(P2P_TYPE){
+      case 3: SGS_stretch0_P2P_alg(Ci, Cj); break;
+      case 5: SGS_stretch0_P2P_Gaussian(Ci, Cj); break;
+      default: std::cout << "Exception 125: Invalid P2P_TYPE "<<P2P_TYPE<<"\n"; throw 123;
+    }
+  }
   void sgs_stretch1_P2P(Cell * Ci, Cell * Cj){
     switch(P2P_TYPE){
       case 3: SGS_stretch1_P2P_alg(Ci, Cj); break;
       case 5: SGS_stretch1_P2P_Gaussian(Ci, Cj); break;
+      default: std::cout << "Exception 125: Invalid P2P_TYPE "<<P2P_TYPE<<"\n"; throw 123;
+    }
+  }
+  void sgs_stretch2_P2P(Cell * Ci, Cell * Cj){
+    switch(P2P_TYPE){
+      case 3: SGS_stretch2_P2P_alg(Ci, Cj); break;
+      case 5: SGS_stretch2_P2P_Gaussian(Ci, Cj); break;
+      default: std::cout << "Exception 125: Invalid P2P_TYPE "<<P2P_TYPE<<"\n"; throw 123;
+    }
+  }
+  void sgs_M2_P2P(Cell * Ci, Cell * Cj){
+    switch(P2P_TYPE){
+      case 3: SGS_M2_P2P_alg(Ci, Cj); break;
+      case 5: SGS_M2_P2P_Gaussian(Ci, Cj); break;
       default: std::cout << "Exception 125: Invalid P2P_TYPE "<<P2P_TYPE<<"\n"; throw 123;
     }
   }
@@ -908,7 +929,10 @@ namespace exafmm {
     else if(SGS){
 
       switch(SGS_TYPE){
+        case 0: sgs_stretch0_P2P(Ci, Cj); break;
         case 1: sgs_stretch1_P2P(Ci, Cj); break;
+        case 2: sgs_stretch2_P2P(Ci, Cj); break;
+        case 5: sgs_M2_P2P(Ci, Cj); break;
         default: std::cout << "Exception 126: Invalid SGS_TYPE "<<SGS_TYPE<<"\n"; throw 126;
       }
 
