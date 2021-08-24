@@ -272,6 +272,7 @@ namespace exafmm {
     for (int i=0; i<Ci->numBodies; i++) {
       vec3 p = 0;
       vec9 J = 0;
+      vec3 pse = 0;
       for (int j=0; j<Cj->numBodies; j++) {
         vec3 dX = Bi[i].X - Bj[j].X;
         real_t R2 = norm(dX);
@@ -280,9 +281,13 @@ namespace exafmm {
           real_t invR3 = 1.0 / R2 / sqrt(R2);
           real_t sgm2 = Bj[j].sigma[0]*Bj[j].sigma[0];
           real_t xi = R2/2/sgm2;
-          real_t sqrtxi = sqrt(xi);
-          real_t gsgm = erf(sqrtxi) - SQRT4pi*sqrtxi*std::exp(-xi);
-          vec3 dgsgmdx = dX*SQRT4pi*sqrtxi*std::exp(-xi)/sgm2;
+          // real_t sqrtxi = sqrt(xi);
+          // real_t sqrtxi = sqrt(R2/2) / Bj[j].sigma[0];
+          // real_t sqrtxi = sqrt(R2) / sqrt(2.0) / Bj[j].sigma[0];
+          real_t sqrtxi = (1/invR3) / R2 / SQRTtwo / Bj[j].sigma[0];  // Saved myself one sqrt =]
+          real_t expxi = std::exp(-xi);
+          real_t gsgm = erf(sqrtxi) - SQRT4pi*sqrtxi*expxi;
+          vec3 dgsgmdx = dX*SQRT4pi*sqrtxi*expxi/sgm2;
           vec3 K = dX*invR3;                            // Singular kernel
           vec3 Ksgm = K*gsgm;                           // Regularized kernel
           for(int ind=0; ind<3; ind++){
@@ -305,10 +310,18 @@ namespace exafmm {
             Bi[i].dJdx3[ind*3 + 1] -= aux2[2]*K[1] + aux3*dX[1]*dX[2];
             Bi[i].dJdx3[ind*3 + 2] -= aux2[2]*K[2] + aux3*dX[2]*dX[2] + gsgm*Bj[j].q[ind]*invR3;
           }
+
+          // TODO: Calculate vols, multiply by nu only
+          real_t aux3 = expxi / (piSQRT2pi * Bi[i].sigma[0]*Bi[i].sigma[0] * sgm2*Bj[j].sigma[0]);
+
+          for(int ind=0; ind<3; ind++){
+            pse[ind] += (Bi[i].vol[0]*Bj[j].q[ind] - Bj[j].vol[0]*Bi[i].q[ind])*aux3;
+          }
         }
       }
       Bi[i].p += p;
       Bi[i].J -= J;
+      Bi[i].pse += pse;
     }
   }
 
@@ -409,7 +422,7 @@ namespace exafmm {
           }
           // Particle Strength Exchange
           real_t sgmij2 = (Bi[i].sigma[0]*Bi[i].sigma[0] + Bj[j].sigma[0]*Bj[j].sigma[0])/2;
-          real_t dnmntr = std::pow(sgmij2, 2.5) * std::pow(R2/sgmij2 + 1, 4.5);
+          real_t dnmntr = fourpi*std::pow(sgmij2, 2.5) * std::pow(R2/sgmij2 + 1, 4.5) / 105;
           for(int ind=0; ind<3; ind++){
             pse[ind] += (Bi[i].vol[0]*Bj[j].q[ind] - Bj[j].vol[0]*Bi[i].q[ind])/dnmntr;
           }
@@ -473,7 +486,7 @@ namespace exafmm {
             Bi[i].dJdx3[ind*3 + 2] += Bj[j].q[ind]*(dX[2]*dX[2]*aux5 - aux4);
           }
           real_t sgmij2 = (Bi[i].sigma[0]*Bi[i].sigma[0] + Bj[j].sigma[0]*Bj[j].sigma[0])/2;
-          real_t dnmntr = std::pow(sgmij2, 2.5) * std::pow(R2/sgmij2 + 1, 4.5);
+          real_t dnmntr = fourpi*std::pow(sgmij2, 2.5) * std::pow(R2/sgmij2 + 1, 4.5) / 105; 
           for(int ind=0; ind<3; ind++){
             pse[ind] += (Bi[i].vol[0]*Bj[j].q[ind] - Bj[j].vol[0]*Bi[i].q[ind])/dnmntr;
           }

@@ -145,6 +145,9 @@ namespace exafmm {
   // bool CSDA;                                    //!< Complex-step derivative approximation
   // bool REGULARIZED;                             //!< Regularized kernel (and no CSDA)
   real_t SQRT4pi = sqrt(1/M_PI_4);
+  real_t piSQRT2pi = M_PI*sqrt(M_PI*2);
+  real_t fourpi = 4.0*M_PI;
+  real_t SQRTtwo = sqrt(2.0);
   real_t LAMBDA = 1.5;                          //! Target core overlap when fixing Lagrangian distortion
   bool RBF = false;                             //! Flag for running RBF routine
   bool SGS = false;                             //! Flag for running SGS routine
