@@ -577,19 +577,20 @@ fmm_SOURCES = fmm.cxx
 fmm_CPPFLAGS = $(AM_CPPFLAGS) -DEXAFMM_EAGER
 
 # FLAGS FOR COMPILING FOR C++-JULIA WRAPPER
+# TODO: make this use an environment variable so that every user does not need to edit this file
 JLCXX_H=/home/edoalvar/.julia/artifacts/16e1de4679fb8520a8af4e6831c7c8e9893d18b4/include
 JULIA_H=/home/edoalvar/Programs/julia-1.6.1/include/julia
-JLCXX_LIB=/home/edoalvar/.julia/artifacts/16e1de4679fb8520a8af4e6831c7c8e9893d18b4/lib/libcxxwrap_julia.so.0.8.3
-JULIA_LIB=/home/edoalvar/Programs/julia-1.6.1/lib/libjulia.so.1
+JLCXX_LIB=/home/edoalvar/.julia/artifacts/16e1de4679fb8520a8af4e6831c7c8e9893d18b4/lib
+JULIA_LIB=/home/edoalvar/Programs/julia-1.6.1/lib
 
 cxxwrap_OBJFLAGS = -DJULIA_ENABLE_THREADING -Dhello_EXPORTS
 cxxwrap_OBJFLAGS += -I${JLCXX_H} -I${JULIA_H}
 cxxwrap_OBJFLAGS += -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG -fPIC
 
-cxxwrap_LINKFLAGS = ${JLCXX_LIB}
+cxxwrap_LINKFLAGS = -L${JLCXX_LIB} -lcxxwrap_julia
 # Comments this line out to make it executable
 cxxwrap_LINKFLAGS += -fPIC  -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG  -shared
-cxxwrap_LINKFLAGS += -Wl,-rpath,: ${JLCXX_LIB} ${JULIA_LIB}
+cxxwrap_LINKFLAGS += -Wl,-rpath,: -L${JLCXX_LIB} -lcxxwrap_julia  -L${JULIA_LIB} -ljulia
 
 TESTS = $(bin_PROGRAMS)
 all: all-am
