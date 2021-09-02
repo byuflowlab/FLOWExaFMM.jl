@@ -1,7 +1,7 @@
 name = "FLOWExaFMM"
 uuid = "a07d1f4e-0e34-4d8b-bfef-e5b961477d34"
 authors = ["Eduardo J. Alvarez <Edo.AlvarezR@gmail.com>"]
-version = "2.0.0"
+version = "2.0.2"
 
 [deps]
 CxxWrap = "1f15a43c-97ca-5a2a-ae31-89f07a497df4"
