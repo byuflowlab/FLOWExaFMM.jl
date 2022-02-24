@@ -5,6 +5,7 @@
 *.mod
 *.o
 *.so
+*.dylib
 *.out*
 *.p
 *.pyc
@@ -19,6 +20,7 @@ config.h.in~
 config.log
 config.status
 Makefile
+Manifest.toml
 stamp-h1
 
 build
