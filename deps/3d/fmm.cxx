@@ -23,6 +23,7 @@
 #include "args.h"
 #include "build_tree.h"
 #include "dataset.h"
+#include "sgs.h"
 #include "kernel.h"
 #include "timer.h"
 #if EXAFMM_EAGER
@@ -159,7 +160,9 @@ bool getPrecision(){
 }
 
 void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t phi,
-                bool verbose, int p2p_type, int l2p_type, bool rbf, bool sort=true){
+                bool verbose, int p2p_type, int l2p_type, int sgs_type,
+                bool rbf, bool sgs, bool transposed, bool reset, bool reset_sgs,
+                bool sort=true){
 
     // Dummy argument values
     char aux0 = 'a';
@@ -177,7 +180,10 @@ void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t p
     VERBOSE = verbose;
     P2P_TYPE = p2p_type;
     L2P_TYPE = l2p_type;
+    SGS_TYPE = sgs_type;
     RBF = rbf;
+    SGS = sgs;
+    TRANSPOSED = transposed;
     const int numBodies = np;
     if(verbose) std::cout << "\tP:\t"<<P<<"\n\tTheta:\t"<<THETA<<"\n\tPhi:\t"<<PHI;
     if(verbose) std::cout << "\n\tncrit:\t"<<NCRIT<<"\n\tnumBodies:\t"<<numBodies<<"\n";
@@ -212,8 +218,14 @@ void calculate(Bodies & bodies, int np, int p, int ncrit, real_t theta, real_t p
     }
 
     // Initialize the particles with 0 potential and force
-    if(verbose) std::cout << "Initializing particles\n";
-    initTarget(bodies, np);
+    if(reset){
+      if(verbose) std::cout << "Initializing particles\n";
+      initTarget(bodies, np);
+    }
+    if(reset_sgs){
+      if(verbose) std::cout << "Initializing particles SGS\n";
+      initTarget2(bodies, np);
+    }
 
     // Build the tree
     if(verbose) std::cout << "Building tree\n";
