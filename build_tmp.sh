@@ -37,11 +37,12 @@ JLCXX_LIB=$JLCXX_H/../lib
 
 # NOTE: on mac, shared libraries have the .dylib extension. This may require further configuration depending on how Eduardo has set this up.
 
+THIS_DIR="$HOME/julia/dev/FLOWExaFMM"
+
 # --------------- COMPILE CODE -------------------------------------------------
-THIS_DIR=$(pwd)
-SRC_DIR=deps
-COMPILE_DIR=build
-SAVE_DIR=src/fmm_tmp
+SRC_DIR=$THIS_DIR/deps
+COMPILE_DIR=$THIS_DIR/build
+SAVE_DIR=$THIS_DIR/src/fmm_tmp
 
 echo "Copying files"
 mkdir $COMPILE_DIR
@@ -49,9 +50,7 @@ cp -r $SRC_DIR/* $COMPILE_DIR/
 
 echo "Configuring build"
 cd $COMPILE_DIR/
-THIS_COMPILE_DIR=$(pwd)
-echo "$THIS_COMPILE_DIR"
-./configure CXX=$CXX CC=$CC --prefix=$THIS_COMPILE_DIR/3d
+sh $COMPILE_DIR/configure CXX=$CXX CC=$CC --prefix=$COMPILE_DIR/3d
 #HOME/.julia/dev/FLOWExaFMM/deps/3d
 # ./configure CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS --enable-single
 # CC=$CC
@@ -61,7 +60,7 @@ echo "Compiling 3d"
 cd 3d
 make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB
 
-tmp_name=$(mktemp $THIS_DIR/$SAVE_DIR/fmm.XXXXXXXX)
+tmp_name=$(mktemp $SAVE_DIR/fmm.XXXXXXXX)
 cd $THIS_DIR
 cp $COMPILE_DIR/3d/fmm $tmp_name
 export FMM=$tmp_name
