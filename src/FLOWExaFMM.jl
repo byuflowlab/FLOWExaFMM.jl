@@ -22,7 +22,7 @@ const module_path = splitdir(@__FILE__)[1]      # Path to this module
 # ------------ CODE ------------------------------------------------------------
 # check environment variable FMM
 fmm_path = "FMM" in keys(ENV) ? ENV["FMM"] : "fmm"
-
+println("Loading fmm located at: $(fmm_path)...")
 @wrapmodule(joinpath(module_path, fmm_path))
 
 function __init__()
