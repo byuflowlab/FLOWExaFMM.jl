@@ -20,7 +20,10 @@ using CxxWrap
 const module_path = splitdir(@__FILE__)[1]      # Path to this module
 
 # ------------ CODE ------------------------------------------------------------
-@wrapmodule(joinpath(module_path, "fmm"))
+# check environment variable FMM
+fmm_path = "FMM" in keys(ENV) ? ENV["FMM"] : "fmm"
+
+@wrapmodule(joinpath(module_path, fmm_path))
 
 function __init__()
     @initcxx

@@ -6,7 +6,7 @@ CC=/usr/local/opt/llvm/bin/clang
 CXX=/usr/local/opt/llvm/bin/clang++
 
 # JULIA_H must point to the directory that contains julia.h
-JULIA_H=/Applications/Julia-1.7.app/Contents/Resources/julia/include/julia
+JULIA_H=/Applications/Julia-1.6.app/Contents/Resources/julia/include/julia
 
 # JLCXX_H must point to the directory that contains jlcxx/jlcxx.hpp from CxxWrap
 # NOTE: You can find this by typing `CxxWrap.prefix_path()` in the Julia REPL
@@ -18,7 +18,7 @@ JULIA_LIB=$JULIA_H/../../lib
 
 # JLCXX_LIB must point to the directory that contains libcxxwrap_julia.so.0.x.x
 # JLCXX_LIB=$JLCXX_H/../lib
-JLCXX_LIB=/Users/randerson/tmps/juliadev/libcxxwrap-julia/build_llvm/lib
+JLCXX_LIB=/Users/randerson/tmps/juliadev/libcxxwrap-julia/build_llvm_1_6/lib
 
 # MPICXX path
 MPIHOME=/usr/local/bin/mpicxx
