@@ -65,4 +65,7 @@ cd $THIS_DIR
 cp $COMPILE_DIR/3d/fmm $tmp_name
 export FMM=$tmp_name
 
+echo "Precompiling Julia cache"
+julia build_tmp.jl
+
 echo "Done!"
