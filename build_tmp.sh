@@ -1,17 +1,17 @@
 # --------------- SUPERCOMPUTER ------------------------------------------------
 # module load julia/1.6
-# module load gcc/11
-# module load openmpi/4.1
+module load gcc/10
+module load openmpi/4.1
 
 # --------------- USER INPUTS --------------------------------------------------
 # choose your C compiler (use LLVM on MacOS)
-CC=/apps/gcc/10.2.0/bin/gcc
-# CC=/apps/openmpi/4.1.1/gcc-10.2.0_cuda-11.2.1/bin/mpicc
+# CC=/apps/gcc/10.2.0/bin/gcc
+CC=/apps/openmpi/4.1.1/gcc-10.2.0_cuda-11.2.1/bin/mpicc
 
 # choose your C++ compiler (use LLVM on MacOS)
-CXX=/apps/gcc/10.2.0/bin/g++
+# CXX=/apps/gcc/10.2.0/bin/g++
 #CXX=/bin/g++
-# CXX=/apps/openmpi/4.1.1/gcc-10.2.0_cuda-11.2.1/bin/mpixx
+CXX=/apps/openmpi/4.1.1/gcc-10.2.0_cuda-11.2.1/bin/mpixx
 
 # JULIA_H must point to the directory that contains julia.h
 # JULIA_H=/fslhome/rander39/julia/julia-1.7.2/include/julia/
@@ -37,15 +37,12 @@ JLCXX_LIB=$JLCXX_H/../lib
 
 # NOTE: on mac, shared libraries have the .dylib extension. This may require further configuration depending on how Eduardo has set this up.
 
-# --------------- COMPILE CODE -------------------------------------------------
-THIS_DIR=$(pwd)
-SRC_DIR=deps
-COMPILE_DIR=build
-SAVE_DIR=src
+THIS_DIR="$HOME/julia/dev/FLOWExaFMM"
 
-echo "Removing existing build"
-rm -rf $COMPILE_DIR
-rm $SAVE_DIR/fmm.so
+# --------------- COMPILE CODE -------------------------------------------------
+SRC_DIR=$THIS_DIR/deps
+COMPILE_DIR=$THIS_DIR/build
+SAVE_DIR=$THIS_DIR/src/fmm_tmp
 
 echo "Copying files"
 mkdir $COMPILE_DIR
@@ -53,10 +50,7 @@ cp -r $SRC_DIR/* $COMPILE_DIR/
 
 echo "Configuring build"
 cd $COMPILE_DIR/
-echo "Starfish"
-THIS_COMPILE_DIR=$(pwd)
-echo "$THIS_COMPILE_DIR"
-./configure CXX=$CXX CC=$CC --prefix=$THIS_COMPILE_DIR/3d --disable-mpi
+sh $COMPILE_DIR/configure CXX=$CXX CC=$CC --prefix=$COMPILE_DIR/3d
 #HOME/.julia/dev/FLOWExaFMM/deps/3d
 # ./configure CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS --enable-single
 # CC=$CC
@@ -66,7 +60,12 @@ echo "Compiling 3d"
 cd 3d
 make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB
 
+tmp_name=$(mktemp $SAVE_DIR/fmm.XXXXXXXX)
 cd $THIS_DIR
-cp $COMPILE_DIR/3d/fmm $SAVE_DIR/fmm
+cp $COMPILE_DIR/3d/fmm $tmp_name
+export FMM=$tmp_name
+
+echo "Precompiling Julia cache"
+julia build_tmp.jl
 
 echo "Done!"
