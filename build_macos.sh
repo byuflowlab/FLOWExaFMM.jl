@@ -45,7 +45,8 @@ cp -r $SRC_DIR/* $COMPILE_DIR/
 
 echo "Configuring build"
 cd $COMPILE_DIR/
-./configure CC=$CC CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS --disable-mpi --disable-omp
+./configure CC=$CC CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS
+# ./configure CC=$CC CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS --disable-mpi --disable-omp
 # --enable-single
 # ./configure
 
