@@ -6,19 +6,21 @@ CC=/usr/local/opt/llvm/bin/clang
 CXX=/usr/local/opt/llvm/bin/clang++
 
 # JULIA_H must point to the directory that contains julia.h
-JULIA_H=/Applications/Julia-1.7.app/Contents/Resources/julia/include/julia
+# NOTE: You can find this by typing `abspath(Sys.BINDIR, Base.INCLUDEDIR)` in
+#       the Julia REPL
+JULIA_H=$(julia --print "abspath(Sys.BINDIR, Base.INCLUDEDIR)")
+JULIA_H=${JULIA_H%\"}; JULIA_H=${JULIA_H#\"}; JULIA_H=$JULIA_H/julia
 
 # JLCXX_H must point to the directory that contains jlcxx/jlcxx.hpp from CxxWrap
 # NOTE: You can find this by typing `CxxWrap.prefix_path()` in the Julia REPL
-# JLCXX_H=/Users/randerson/.julia/artifacts/eb1ece2a20e3bd68968d861ee1e8e6a00d077d9e/include
-JLCXX_H=/Users/randerson/tmps/juliadev/libcxxwrap-julia/include
+JLCXX_H=$(julia --print "import CxxWrap; CxxWrap.prefix_path()")
+JLCXX_H=${JLCXX_H%\"}; JLCXX_H=${JLCXX_H#\"}; JLCXX_H=$JLCXX_H/include
 
 # Julia_LIB must point to the directory that contains libjulia.so.x
 JULIA_LIB=$JULIA_H/../../lib
 
 # JLCXX_LIB must point to the directory that contains libcxxwrap_julia.so.0.x.x
-# JLCXX_LIB=$JLCXX_H/../lib
-JLCXX_LIB=/Users/randerson/tmps/juliadev/libcxxwrap-julia/build_llvm/lib
+JLCXX_LIB=$JLCXX_H/../lib
 
 # MPICXX path
 MPIHOME=/usr/local/bin/mpicxx
@@ -27,7 +29,7 @@ MPIHOME=/usr/local/bin/mpicxx
 LDFLAGS="-L/usr/local/opt/llvm/lib"
 # -Wl,-rpath,/usr/local/opt/llvm/lib"
 
-# NOTE: on mac, shared libraries have the .dylib extension. This may require further configuration depending on how Eduardo has set this up.
+# NOTE: on mac, shared libraries have the .dylib extension.
 
 # --------------- COMPILE CODE -------------------------------------------------
 THIS_DIR=$(pwd)
