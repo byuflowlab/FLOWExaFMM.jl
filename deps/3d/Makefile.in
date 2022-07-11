@@ -585,11 +585,13 @@ fmm_CPPFLAGS = $(AM_CPPFLAGS) -DEXAFMM_EAGER
 
 cxxwrap_OBJFLAGS = -DJULIA_ENABLE_THREADING -Dhello_EXPORTS
 cxxwrap_OBJFLAGS += -I${JLCXX_H} -I${JULIA_H}
-cxxwrap_OBJFLAGS += -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG -fPIC
+# cxxwrap_OBJFLAGS += -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG -fPIC
+cxxwrap_OBJFLAGS += -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG -fPIC
 
 cxxwrap_LINKFLAGS = -L${JLCXX_LIB} -lcxxwrap_julia
 # Comments this line out to make it executable
-cxxwrap_LINKFLAGS += -fPIC  -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG  -shared
+# cxxwrap_LINKFLAGS += -fPIC  -march=native -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG  -shared
+cxxwrap_LINKFLAGS += -fPIC  -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG  -shared
 cxxwrap_LINKFLAGS += -Wl,-rpath,: -L${JLCXX_LIB} -lcxxwrap_julia  -L${JULIA_LIB} -ljulia
 
 TESTS = $(bin_PROGRAMS)
