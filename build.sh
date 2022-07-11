@@ -38,7 +38,10 @@ cd $COMPILE_DIR/
 
 echo "Compiling 3d"
 cd 3d
-make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB
+# make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB
+# -ffast-math might be faster, but not safe in some architectures
+make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB EXTRAOBJFLAGS=-ffast-math
+
 
 
 cd $THIS_DIR
