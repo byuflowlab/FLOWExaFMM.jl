@@ -1,9 +1,6 @@
 # --------------- USER INPUTS --------------------------------------------------
-# choose your C compiler (use LLVM on MacOS)
-CC=/usr/local/opt/llvm/bin/clang
-
-# choose your C++ compiler (use LLVM on MacOS)
-CXX=/usr/local/opt/llvm/bin/clang++
+# choose your C++ compiler
+CXX=/opt/homebrew/bin/gcc-11
 
 # JULIA_H must point to the directory that contains julia.h
 # NOTE: You can find this by typing `abspath(Sys.BINDIR, Base.INCLUDEDIR)` in
@@ -26,7 +23,8 @@ JLCXX_LIB=$JLCXX_H/../lib
 MPIHOME=/usr/local/bin/mpicxx
 
 # OpenMP flags
-LDFLAGS="-L/usr/local/opt/llvm/lib"
+LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+# LDFLAGS="-L/usr/local/opt/llvm/lib"
 # -Wl,-rpath,/usr/local/opt/llvm/lib"
 
 # NOTE: on mac, shared libraries have the .dylib extension.
@@ -47,7 +45,9 @@ cp -r $SRC_DIR/* $COMPILE_DIR/
 
 echo "Configuring build"
 cd $COMPILE_DIR/
-./configure CC=$CC CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS
+./configure CXX=$CXX
+# ./configure CXX=$CXX LDFLAGS=$LDFLAGS --disable-mpi
+# ./configure CC=$CC CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS
 # ./configure CC=$CC CXX=$CXX MPICXX=$MPIHOME LDFLAGS=$LDFLAGS --disable-mpi --disable-omp
 # --enable-single
 # ./configure
