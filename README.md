@@ -8,10 +8,7 @@ Julia wrapper of ExaFMM with modifications for a vortex solver. Developed and te
 
 # Compilation Instructions
 
-## Linux
-
-
-To compile the C++ part of this code, run the build script as `sh build.sh` (or `sh build-macos.sh` for MacOs), which should create the a binary file under `src/`. Try the following if encountering errors:
+To compile the C++ part of this package, run the build script as `sh build.sh` (or `sh build_macos.sh` for MacOs), which should create a binary file under `src/`. Try the following if encountering errors:
 
 * Test that you can correctly compile C++ code wrapped for Julia following these instructions: [LINK](https://nbviewer.org/github/byuflowlab/FLOWVPM.jl/blob/master/docs/installation-linux.ipynb)
 * Mac user may also need to take a look at these instructions: [LINK](https://github.com/byuflowlab/FLOWUnsteady/issues/26)
