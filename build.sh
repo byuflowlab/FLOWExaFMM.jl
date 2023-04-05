@@ -17,6 +17,11 @@ JULIA_LIB=$JULIA_H/../../lib
 # JLCXX_LIB must point to the directory that contains libcxxwrap_julia.so.0.x.x
 JLCXX_LIB=$JLCXX_H/../lib
 
+JULIA_H=C:/Users/dave/AppData/Local/Programs/Julia-1.7.0/include/julia
+JLCXX_H=C:/Users/dave/.julia/artifacts/c59cc3313b777d84d3bfeaa750b97bbd9f2b7d12/include
+JULIA_LIB=C:/Users/dave/AppData/Local/Programs/Julia-1.7.0/include/julia/../../lib
+JLCXX_LIB=C:/Users/dave/.julia/artifacts/c59cc3313b777d84d3bfeaa750b97bbd9f2b7d12/include/../lib
+
 # --------------- COMPILE CODE -------------------------------------------------
 THIS_DIR=$(pwd)
 SRC_DIR=deps
@@ -33,7 +38,7 @@ cp -r $SRC_DIR/* $COMPILE_DIR/
 
 echo "Configuring build"
 cd $COMPILE_DIR/
-./configure
+./configure --includedir=C:/lib/mpi/include LDFLAGS=-LC:/lib/mpi/lib LIBS=-lmsmpi
 # ./configure --enable-single
 
 echo "Compiling 3d"
@@ -41,8 +46,8 @@ cd 3d
 # make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB
 
 # -ffast-math might be faster, but not safe in some architectures
-make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB EXTRAOBJFLAGS=-ffast-math
 
+mingw32-make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB EXTRAOBJFLAGS=-ffast-math
 
 
 cd $THIS_DIR
