@@ -25,7 +25,7 @@ SAVE_DIR=src
 
 echo "Removing existing build"
 rm -rf $COMPILE_DIR
-rm $SAVE_DIR/fmm.so
+rm -f $SAVE_DIR/fmm.so
 
 echo "Copying files"
 mkdir $COMPILE_DIR
@@ -49,3 +49,24 @@ cd $THIS_DIR
 cp $COMPILE_DIR/3d/fmm $SAVE_DIR/fmm.so
 
 echo "Done!"
+
+# ---      UNCOMMENT THIS SECTION FOR        ---
+# --- ADDITIONAL STEPS FOR BYU SUPERCOMPUTER ---
+# rm -f $COMPILE_DIR/3d/fmm $SAVE_DIR/fmm.so
+#
+# cd $COMPILE_DIR/3d/
+#
+# # libmpi.so often causes trouble and has to be included with fmm
+# MPI_LIB=$(dirname $(which mpicxx))/../lib
+#
+# # Compiler flags with debugging
+# # mpicxx -ffast-math -funroll-loops -fabi-version=6 -Wfatal-errors -fopenmp -g -O2 -o fmm fmm-fmm.o -L$JLCXX_LIB -lcxxwrap_julia -fPIC -march=broadwell -Wunused-parameter -Wextra -Wreorder -std=gnu++1z -O3 -DNDEBUG -shared -Wl,-rpath,$MPI_LIB: -LJLCXX_LIB -lcxxwrap_julia -L$JULIA_LIB -ljulia
+#
+# # Compiler flags without debugging
+# mpicxx -ffast-math -funroll-loops -fabi-version=6 -fopenmp -O2 -o fmm fmm-fmm.o -L$JLCXX_LIB -lcxxwrap_julia -fPIC -march=broadwell -std=gnu++1z -O3 -shared -Wl,-rpath,$MPI_LIB: -LJLCXX_LIB -lcxxwrap_julia -L$JULIA_LIB -ljulia
+#
+# cd $THIS_DIR
+# cp $COMPILE_DIR/3d/fmm $SAVE_DIR/fmm.so
+#
+# # Testing FLOWExaFMM import
+# julia -e "import FLOWExaFMM" && echo "FLOWExaFMM installation successful!"
