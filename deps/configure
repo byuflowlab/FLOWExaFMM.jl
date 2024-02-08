@@ -3489,6 +3489,8 @@ else
   am__fastdepCXX_FALSE=
 fi
 
+am__fastdepCXX_TRUE=
+am__fastdepCXX_FALSE='#'
 
 ac_ext=${ac_fc_srcext-f}
 ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'

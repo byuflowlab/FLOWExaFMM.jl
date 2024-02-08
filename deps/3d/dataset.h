@@ -46,10 +46,10 @@ namespace exafmm {
       int begin = 0;
       int end = bodies.size();
       splitRange(begin, end, i, numSplit);
-      srand48(seed);
+      srand(seed);
       for (size_t b=begin; b!=end; ++b) {
         for (int d=0; d<3; d++) {
-          bodies[b].X[d] = drand48() * 2 * M_PI - M_PI;
+          bodies[b].X[d] = double(rand())/RAND_MAX * 2 * M_PI - M_PI;
         }
       }
     }
@@ -63,10 +63,10 @@ namespace exafmm {
       int begin = 0;
       int end = bodies.size();
       splitRange(begin, end, i, numSplit);
-      srand48(seed);
+      srand(seed);
       for (size_t b=begin; b!=end; ++b) {
         for (int d=0; d<3; d++) {
-          bodies[b].X[d] = drand48() * 2 - 1;
+          bodies[b].X[d] = double(rand())/RAND_MAX * 2 - 1;
         }
         real_t r = std::sqrt(norm(bodies[b].X));
         bodies[b].X *= M_PI / r;
@@ -82,10 +82,10 @@ namespace exafmm {
       int begin = 0;
       int end = bodies.size();
       splitRange(begin, end, i, numSplit);
-      srand48(seed);
+      srand(seed);
       for (size_t b=begin; b!=end; ++b) {
-        real_t theta = drand48() * M_PI * 0.5;
-        real_t phi = drand48() * M_PI * 0.5;
+        real_t theta = double(rand())/RAND_MAX * M_PI * 0.5;
+        real_t phi = double(rand())/RAND_MAX * M_PI * 0.5;
         bodies[b].X[0] = 2 * M_PI * std::sin(theta) * std::cos(phi) - M_PI;
         bodies[b].X[1] = 2 * M_PI * std::sin(theta) * std::sin(phi) - M_PI;
         bodies[b].X[2] = 2 * M_PI * std::cos(theta) - M_PI;
@@ -101,12 +101,12 @@ namespace exafmm {
       int begin = 0;
       int end = bodies.size();
       splitRange(begin, end, i, numSplit);
-      srand48(seed);
+      srand(seed);
       size_t b = begin;
       while (b != end) {
-        real_t X1 = drand48();
-        real_t X2 = drand48();
-        real_t X3 = drand48();
+        real_t X1 = double(rand())/RAND_MAX;
+        real_t X2 = double(rand())/RAND_MAX;
+        real_t X3 = double(rand())/RAND_MAX;
         real_t R = 1.0 / sqrt( (pow(X1, -2.0 / 3.0) - 1.0) );
         if (R < 100.0) {
           real_t Z = (1.0 - 2.0 * X2) * R;
@@ -131,11 +131,11 @@ namespace exafmm {
         int begin = 0;
         int end = bodies.size();
         splitRange(begin, end, i, numSplit);
-        srand48(seed);
+        srand(seed);
 
         real_t average = 0;
         for (size_t b=begin; b!=end; ++b) {
-          bodies[b].q[n] = drand48() - .5;
+          bodies[b].q[n] = double(rand())/RAND_MAX - .5;
           average += bodies[b].q[n];
         }
         average /= (end - begin);
