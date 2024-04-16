@@ -1,5 +1,5 @@
 # FLOWExaFMM
-Julia wrapper of ExaFMM with modifications for a vortex solver. Developed and tested in Julia v1.6.
+Julia wrapper of ExaFMM with modifications for a vortex solver. Developed in Julia v1.6, latest test in Julia v1.10.
 
 [ExaFMM](https://joss.theoj.org/papers/10.21105/joss.03145) is a fast multipole method for exascale computing developed by Lorena Barba and Rio Yokota
 
@@ -17,6 +17,6 @@ To compile the C++ part of this package, run the build script as `sh build.sh` (
 
 # Authorship
 ExaFMM (https://github.com/exafmm) was created and developed by Rio Yokota and Lorena Barba and licensed as BSD 3-Clause.
-FLOWExaFMM is a version of ExaFMM with modifications by Eduardo J. Alvarez (Edo.AlvarezR@gmail.com) at BYU's FLOW Lab, to be used in a viscous vortex particle code, and wrapped for the Julia language.
+FLOWExaFMM is a version of ExaFMM with modifications by [Eduardo J. Alvarez](https://www.linkedin.com/in/alvarezedo/) and the BYU's [FLOW Lab](https://flow.byu.edu/), to be used in a viscous vortex particle code, and wrapped for the Julia language.
 
 FLOWExaFMM preserves the same BSD 3-Clause license of the original code.
