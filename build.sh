@@ -1,5 +1,7 @@
-# --------------- USER INPUTS --------------------------------------------------
+JULIA_DETAILS=$(julia --version)
+CXXWRAP_DETAILS=$(julia --print 'import Pkg; Pkg.status("CxxWrap")')
 
+# --------------- USER INPUTS --------------------------------------------------
 # JULIA_H must point to the directory that contains julia.h
 # NOTE: You can find this by typing `abspath(Sys.BINDIR, Base.INCLUDEDIR)` in
 #       the Julia REPL
@@ -43,12 +45,14 @@ cd 3d
 # -ffast-math might be faster, but not safe in some architectures
 make JULIA_H=$JULIA_H JLCXX_H=$JLCXX_H JULIA_LIB=$JULIA_LIB JLCXX_LIB=$JLCXX_LIB EXTRAOBJFLAGS=-ffast-math
 
-
-
 cd $THIS_DIR
 cp $COMPILE_DIR/3d/fmm $SAVE_DIR/fmm.so
 
-echo "Done!"
+echo -e "\nDone!"
+
+echo -e "\nCompile Summary:"
+echo $JULIA_DETAILS
+echo $CXXWRAP_DETAILS | sed 's/.*C/C/'
 
 # ---      UNCOMMENT THIS SECTION FOR        ---
 # --- ADDITIONAL STEPS FOR BYU SUPERCOMPUTER ---
