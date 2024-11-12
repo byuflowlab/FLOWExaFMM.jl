@@ -20,7 +20,7 @@ using CxxWrap
 const module_path = splitdir(@__FILE__)[1]      # Path to this module
 
 # ------------ CODE ------------------------------------------------------------
-@wrapmodule( () -> joinpath(module_path, "fmm") )
+@wrapmodule( () -> joinpath(module_path, "fmm" * (Sys.isapple() ? ".dylib" : ".so")) )
 
 function __init__()
     @initcxx
